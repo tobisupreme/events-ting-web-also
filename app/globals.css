@@ -24,7 +24,7 @@ body {
   @apply !border-0
 }
 #html5qr-code-full-region #html5qr-code-full-region__scan_region {
-  @apply flex justify-center items-center !min-h-52
+  @apply flex justify-center items-center
 }
 #html5qr-code-full-region__dashboard_section_csr button, .btn {
   @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
