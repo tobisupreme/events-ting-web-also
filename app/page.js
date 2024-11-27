@@ -14,6 +14,7 @@ export default function Home() {
     setIsLoading(true);
     setResultContainerVisible(true);
     // console.log("App [result]", decodedResult);
+    console.log(decodedText);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/registrations/${decodedText}`);
     const data = await response.json();
@@ -55,7 +56,7 @@ export default function Home() {
             )}
           </div>
 
-          <button className="btn" onClick={() => setResultContainerVisible(false)}>
+          <button className="btn !text-gray-700 !bg-transparent border border-gray-700 !hover:text-white !hover:background-gray-700" onClick={() => setResultContainerVisible(false)}>
             New Scan
           </button>
         </div>
