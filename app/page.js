@@ -5,18 +5,19 @@ import ScannerConatiner from "@/components/ScannerContainer";
 import ResultContainer from "@/components/ResultContainer";
 
 export default function Home() {
-  const [decodedResults, setDecodedResults] = useState([]);
+  const [decodedText, setDecodedText] = useState("");
   const [resultContainerVisible, setResultContainerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
 
   const onNewScanResult = async (decodedText, decodedResult) => {
+    setDecodedText(decodedText);
     setIsLoading(true);
     setResultContainerVisible(true);
     // console.log("App [result]", decodedResult);
     console.log(decodedText);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/registrations/${decodedText}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${decodedText}`);
     const data = await response.json();
     console.log(data);
 
@@ -52,7 +53,7 @@ export default function Home() {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              result && <ResultContainer result={result} />
+              result && <ResultContainer result={result} ticketId={decodedText} />
             )}
           </div>
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const ResultContainer = ({result}) => {
+const ResultContainer = ({result, ticketId}) => {
     const [checkedIn, setCheckedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     console.log(result);
@@ -17,8 +17,11 @@ const ResultContainer = ({result}) => {
         );
     }
 
+    const ticket = result.data.tickets.find((e)=>e.ticketId === ticketId);
+    console.log("ticketed: ", ticket);
+
     // Check whether user is already checked in
-    if (result.data.ticket.status === "Confirmed") {
+    if (ticket.status === "Confirmed") {
         // If YES - Confirm that user is already checked in
         // I'd (early) return a component here to show that user is already checked in
         return (
@@ -48,7 +51,7 @@ const ResultContainer = ({result}) => {
                         <div>
                             <small className="text-gray-400">Ticket ID</small>
                             <p className="font-bold text-lg text-gray-600">
-                                {result.data.ticket.id}
+                                {ticketId}
                             </p>
                         </div>
                     </div>
@@ -59,7 +62,7 @@ const ResultContainer = ({result}) => {
 
     function handleCheckin() {
         setIsLoading(true);
-        fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/registrations/${result.data.id}`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${tickedId}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -113,7 +116,7 @@ const ResultContainer = ({result}) => {
                             <div>
                                 <small className="text-gray-400">Ticket ID</small>
                                 <p className="font-bold text-lg text-gray-600">
-                                    {result.data.ticket.id}
+                                    {tickedId}
                                 </p>
                             </div>
                         </div>
