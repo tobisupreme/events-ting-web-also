@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import ScannerConatiner from "@/components/ScannerContainer";
 import ResultContainer from "@/components/ResultContainer";
+import ScannerConatiner from "@/components/ScannerContainer";
 
 export default function Home() {
   const [emailOrTicketId, setEmailOrTicketId] = useState("");
@@ -11,15 +11,12 @@ export default function Home() {
   const [result, setResult] = useState(null);
 
   const onNewScanResult = async (decodedText, decodedResult) => {
-    // setEmailOrTicketId(decodedText);
+    setEmailOrTicketId(decodedText);
     setIsLoading(true);
     setResultContainerVisible(true);
-    // console.log("App [result]", decodedResult);
-    console.log(decodedText);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${decodedText}`);
     const data = await response.json();
-    console.log(data);
 
     if (data) {
       setResult(data);
@@ -30,12 +27,9 @@ export default function Home() {
   const onSubmit = async () => {
     setIsLoading(true);
     setResultContainerVisible(true);
-    // console.log("App [result]", decodedResult);
-    console.log(emailOrTicketId);
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${emailOrTicketId}`);
     const data = await response.json();
-    console.log(data);
 
     if (data) {
       setResult(data);
@@ -56,9 +50,11 @@ export default function Home() {
           qrCodeSuccessCallback={onNewScanResult}
           showTorchButtonIfSupported={true}
         />
+
         <div className="relative mx-auto my-10 w-[50vw]">
           <hr className="w-full" />
         </div>
+
         <div className="mx-auto flex flex-wrap md:flex-nowrap items-center justify-center w-[90%] md:w-2/5 gap-4">
           <input 
             type="text" 

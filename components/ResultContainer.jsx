@@ -1,21 +1,13 @@
 import { useState } from "react";
 
 const ResultContainer = ({result, emailOrTicketId}) => {
-    console.log(emailOrTicketId);
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const isEmail = emailOrTicketId && emailRegex.test(emailOrTicketId);
-    console.log("isEmail: ", isEmail);
-
-    console.log("Searching with: ", emailOrTicketId);
+    const isEmail = emailRegex.test(emailOrTicketId);
 
     const [checkedIn, setCheckedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    console.log(result);
-
-    // Result error - (early) return component to show error message
     if (result.status === "error") {
-        console.log(result);
         return (
             <div className="flex justify-center items-center h-full">
                 <div className="text-center">
@@ -26,21 +18,19 @@ const ResultContainer = ({result, emailOrTicketId}) => {
         );
     }
 
-    const pendingTicket = result.data.tickets.find((e)=>e.status === "Pending") || null;
+    const pendingTicket = result.data.tickets.find((e)=>e.status === "Pending");
     const ticket = isEmail ? pendingTicket : result.data.tickets.find((e)=>e.ticketId === emailOrTicketId);
     const ticketId = isEmail ? pendingTicket?.ticketId : emailOrTicketId;
-    
-    console.log("ticketed: ", ticket); // Undefined
 
     if (isEmail && !pendingTicket || !ticket) {
         return (
             <div className="flex justify-center h-full">
                 <div className="text-center">
                     <div>
-                        <svg className="w-10 h-10 mx-auto text-red-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <svg className="w-10 h-10 mx-auto text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                         </svg>
-                        <h1 className="text-2xl font-bold text-red-700">No Ticket Found</h1>
+                        <h1 className="text-2xl font-bold text-gray-700">No Ticket Found</h1>
                         <p className="text-lg text-gray-600">
                             No pending ticket found on this email address!
                         </p>
@@ -60,14 +50,14 @@ const ResultContainer = ({result, emailOrTicketId}) => {
                             </p>
                         </div>
                     </div>
-                    {/* Ticket Counts */}
-                    { result.data.tickets.length > 1 && (
+
+                    { result.data.tickets.length > 0 && (
                             <div className="border border-dotted rounded p-4 !mt-5">
                                 <div className="mb-3 flex space-x-1 italic items-center mx-auto p-3 bg-gray-200 rounded  w-fit mt-5">
                                     <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
-                                    <span>All {result.data.tickets.length} tickets to the current email address has been checked in.</span>
+                                    <span>All {result.data.tickets.length} tickets associated to current email address have been checked in.</span>
                                 </div>
                             </div>
                         )}
@@ -93,18 +83,15 @@ const ResultContainer = ({result, emailOrTicketId}) => {
         });
     }
 
-    // Check whether user is already checked in
     if (!isEmail && ticket.status === "Confirmed") {
-        // If YES - Confirm that user is already checked in
-        // I'd (early) return a component here to show that user is already checked in
         return (
             <div className="flex justify-center h-full">
                 <div className="text-center">
                     <div>
-                        <svg className="mx-auto w-10 h-10 text-green-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="mx-auto w-10 h-10 text-yellow-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                             <path fillRule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clipRule="evenodd"/>
                         </svg>
-                        <h1 className="text-2xl font-bold text-green-500">Checked In</h1>
+                        <h1 className="text-2xl font-bold text-yellow-500">Checked In</h1>
                         <p className="text-lg text-gray-600">This ticket has already been checked in!</p>
                     </div>
                     <hr className="my-5 w-[80vw]" />
@@ -128,14 +115,13 @@ const ResultContainer = ({result, emailOrTicketId}) => {
                             </p>
                         </div>
 
-                        {/* Ticket Counts */}
                         { result.data.tickets.length > 1 && result.data.tickets.filter((e)=>e.status === "Pending").length > 0 && (
                             <div className="border border-dotted rounded p-4 !mt-5">
                                 <div className="mb-3 flex space-x-1 items-center mx-auto p-3 bg-gray-200 rounded  w-fit mt-5">
                                     <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                     </svg>
-                                    <span>User has {result.data.tickets.filter((e)=>e.status === "Pending").length} more tickets to check in</span>
+                                    <span>This person has {result.data.tickets.filter((e)=>e.status === "Pending").length} more available tickets.</span>
                                 </div>
 
                                 {!checkedIn ? (
@@ -169,8 +155,6 @@ const ResultContainer = ({result, emailOrTicketId}) => {
                                 )}
                             </div>
                         )}
-                        {/* Length of Ticket with Confirmed Status */}
-                        {/* Length of Ticket with Pending Status */}
                     </div>
                 </div>
             </div>
@@ -251,13 +235,12 @@ const ResultContainer = ({result, emailOrTicketId}) => {
                             </button>
                         )}
 
-                        {/* Ticket Counts */}
                         { isEmail && result.data.tickets.length > 1 && result.data.tickets.filter((e)=>e.status === "Pending").length > 0 && (
                             <div className="mb-3 flex space-x-1 italic items-center mx-auto p-3 bg-gray-200 rounded  w-fit mt-5">
                                 <svg className="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                 </svg>
-                                <span>User has {result.data.tickets.filter((e)=>e.status === "Pending").length} more tickets to check in</span>
+                                <span>This person has {result.data.tickets.filter((e)=>e.status === "Pending").length} more available tickets.</span>
                             </div>
                         )}
                     </div>
