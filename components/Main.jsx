@@ -63,6 +63,11 @@ const Main = () => {
             placeholder="Ticket ID or Email Address" 
             required 
             onChange={(e) => setEmailOrTicketId(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && emailOrTicketId.trim()) {
+                onSubmit();
+              }
+            }}
           />
           <button
             className={`btn !text-white ${!emailOrTicketId.trim() ? '!bg-gray-400' : '!bg-blue-600'} !hover:bg-blue-700 whitespace-nowrap`}
