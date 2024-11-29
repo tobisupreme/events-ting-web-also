@@ -5,13 +5,13 @@ import ScannerConatiner from "@/components/ScannerContainer";
 import ResultContainer from "@/components/ResultContainer";
 
 export default function Home() {
-  const [decodedText, setDecodedText] = useState("");
+  const [emailOrTicketId, setEmailOrTicketId] = useState("");
   const [resultContainerVisible, setResultContainerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
 
   const onNewScanResult = async (decodedText, decodedResult) => {
-    setDecodedText(decodedText);
+    // setEmailOrTicketId(decodedText);
     setIsLoading(true);
     setResultContainerVisible(true);
     // console.log("App [result]", decodedResult);
@@ -27,12 +27,28 @@ export default function Home() {
     }
   };
 
+  const onSubmit = async () => {
+    setIsLoading(true);
+    setResultContainerVisible(true);
+    // console.log("App [result]", decodedResult);
+    console.log(emailOrTicketId);
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${emailOrTicketId}`);
+    const data = await response.json();
+    console.log(data);
+
+    if (data) {
+      setResult(data);
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className="w-full h-screen flex flex-col">
       <div className="hidden md:block">
         <h1 className="text-2xl font-bold text-center">EventsTing Check-In</h1>
       </div>
-      <section className="flex grow md:items-center justify-center">
+      <section className="flex flex-col grow md:items-center justify-center">
         <ScannerConatiner
           fps={10}
           qrbox={250}
@@ -40,6 +56,21 @@ export default function Home() {
           qrCodeSuccessCallback={onNewScanResult}
           showTorchButtonIfSupported={true}
         />
+        <div className="relative mx-auto my-10 w-[50vw]">
+          <hr className="w-full" />
+        </div>
+        <div className="mx-auto flex flex-wrap md:flex-nowrap items-center justify-center w-[90%] md:w-2/5 gap-4">
+          <input 
+            type="text" 
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" 
+            placeholder="Ticket ID or Email Address" 
+            required 
+            onChange={(e) => setEmailOrTicketId(e.target.value)}
+          />
+          <button className="btn !text-white !bg-blue-600 !hover:bg-blue-700 whitespace-nowrap" onClick={onSubmit}>
+            Search Ticket
+          </button>
+        </div>
       </section>
       <section className={`${resultContainerVisible ? "absolute" : "hidden"} z-50 bg-black/80 top-0 w-full h-full flex justify-center`}>
         <div className={`${resultContainerVisible ? "top-0" : "top-full"} self-end w-full h-[80%] flex flex-col bg-white rounded-tr-3xl rounded-tl-3xl p-5 md:p-10 delay-300 transition-all ease-out duration-300`}>
@@ -53,7 +84,7 @@ export default function Home() {
                 <span className="sr-only">Loading...</span>
               </div>
             ) : (
-              result && <ResultContainer result={result} ticketId={decodedText} />
+              result && <ResultContainer result={result} emailOrTicketId={emailOrTicketId} />
             )}
           </div>
 
