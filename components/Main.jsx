@@ -39,8 +39,8 @@ const Main = () => {
 
   return (
     <div className="w-full h-screen flex flex-col">
-      <div className="hidden md:block">
-        <h1 className="text-2xl font-bold text-center">EventsTing Check-In</h1>
+      <div className="hidden md:block p-2 border-b">
+        <h1 className="text-2xl font-bold text-center">YPIT Check-In App</h1>
       </div>
       <section className="flex flex-col grow md:items-center justify-center">
         <ScannerContainer
