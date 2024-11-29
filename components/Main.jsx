@@ -65,7 +65,7 @@ const Main = () => {
             onChange={(e) => setEmailOrTicketId(e.target.value)}
           />
           <button
-            className="btn !text-white !bg-blue-600 !hover:bg-blue-700 whitespace-nowrap"
+            className={`btn !text-white ${!emailOrTicketId.trim() ? '!bg-gray-400' : '!bg-blue-600'} !hover:bg-blue-700 whitespace-nowrap`}
             onClick={onSubmit}
             disabled={!emailOrTicketId.trim()}
           >
