@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ResultContainer from "@/components/ResultContainer";
-import ScannerConatiner from "@/components/ScannerContainer";
+import ScannerContainer from "@/components/ScannerContainer";
 
 const Main = () => {
   const [emailOrTicketId, setEmailOrTicketId] = useState("");
@@ -43,7 +43,7 @@ const Main = () => {
         <h1 className="text-2xl font-bold text-center">EventsTing Check-In</h1>
       </div>
       <section className="flex flex-col grow md:items-center justify-center">
-        <ScannerConatiner
+        <ScannerContainer
           fps={10}
           qrbox={250}
           disableFlip={false}
