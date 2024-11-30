@@ -28,7 +28,8 @@ const Main = () => {
     setIsLoading(true);
     setResultContainerVisible(true);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${emailOrTicketId}`);
+    const normalisedEmailOrTicketId = emailOrTicketId?.trim().toLowerCase();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${normalisedEmailOrTicketId}`);
     const data = await response.json();
 
     if (data) {
@@ -62,8 +63,17 @@ const Main = () => {
             placeholder="Ticket ID or Email Address" 
             required 
             onChange={(e) => setEmailOrTicketId(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && emailOrTicketId.trim()) {
+                onSubmit();
+              }
+            }}
           />
-          <button className="btn !text-white !bg-blue-600 !hover:bg-blue-700 whitespace-nowrap" onClick={onSubmit}>
+          <button
+            className={`btn !text-white ${!emailOrTicketId.trim() ? '!bg-gray-400' : '!bg-blue-600'} !hover:bg-blue-700 whitespace-nowrap`}
+            onClick={onSubmit}
+            disabled={!emailOrTicketId.trim()}
+          >
             Search Ticket
           </button>
         </div>
