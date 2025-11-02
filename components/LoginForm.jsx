@@ -1,7 +1,9 @@
 "use client";
 
 import { handleLogin } from "@/app/actions";
+import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import Confetti from "./Confetti";
 
 const initialState = {};
 
@@ -21,9 +23,26 @@ function SubmitButton() {
 
 export function LoginForm() {
   const [state, formAction] = useFormState(handleLogin, initialState);
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    let timer;
+    if (showConfetti) {
+      timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 8000);
+    }
+    return () => clearTimeout(timer);
+  }, [showConfetti]);
+
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault();
+    setShowConfetti(true);
+  };
 
   return (
     <div className="text-center">
+      {showConfetti && <Confetti />}
       <h2 className="text-5xl font-extrabold mb-12 text-theme-primary">
         Login
       </h2>
@@ -87,7 +106,11 @@ export function LoginForm() {
           />
         </div>
         <div className="text-right">
-          <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
+          <a
+            href="#"
+            onClick={handleForgotPasswordClick}
+            className="text-sm text-gray-500 hover:text-gray-700"
+          >
             Forgot Password?
           </a>
         </div>
