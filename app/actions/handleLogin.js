@@ -36,14 +36,5 @@ export async function handleLogin(prevState, formData) {
     return { error: "An unexpected error occurred. Please try again." };
   }
 
-  redirect("/");
-}
-
-export const verifySession = async (session) => {
-  return !!session;
-};
-
-export async function handleLogout() {
-  (await cookies()).delete("eventsTingAuthToken");
-  redirect("/");
+  redirect("/events");
 }

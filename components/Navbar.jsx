@@ -1,6 +1,6 @@
 "use client";
 
-import { handleLogout } from "@/app/actions";
+import { handleLogout } from "@/app/actions/logout";
 import { useState } from "react";
 
 const Navbar = () => {

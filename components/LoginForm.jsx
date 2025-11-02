@@ -1,6 +1,6 @@
 "use client";
 
-import { handleLogin } from "@/app/actions";
+import { handleLogin } from "@/app/actions/handleLogin";
 import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import Confetti from "./Confetti";
