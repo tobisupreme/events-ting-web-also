@@ -41,3 +41,8 @@ export async function handleLogin(prevState, formData) {
 export const verifySession = async (session) => {
   return !!session;
 };
+
+export async function handleLogout() {
+  (await cookies()).delete("eventsTingAuthToken");
+  redirect("/");
+}
