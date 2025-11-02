@@ -2,6 +2,7 @@
 
 import ResultContainer from "@/components/ResultContainer";
 import ScannerContainer from "@/components/ScannerContainer";
+import { urls } from "@/lib/urls";
 import { useState } from "react";
 
 const Main = () => {
@@ -15,9 +16,7 @@ const Main = () => {
     setIsLoading(true);
     setResultContainerVisible(true);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${decodedText}`
-    );
+    const response = await fetch(urls.getRegistration(decodedText));
     const data = await response.json();
 
     if (data) {
@@ -32,7 +31,7 @@ const Main = () => {
 
     const normalisedEmailOrTicketId = emailOrTicketId?.trim().toLowerCase();
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${normalisedEmailOrTicketId}`
+      urls.getRegistration(normalisedEmailOrTicketId)
     );
     const data = await response.json();
 

@@ -1,5 +1,6 @@
 "use server";
 
+import { urls } from "@/lib/urls";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -8,14 +9,14 @@ export async function handleLogin(prevState, formData) {
   const password = formData.get("password");
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/v2/auth/login`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      }
-    );
+    const response = await fetch(urls.login, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": true,
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
     const data = await response.json();
 
