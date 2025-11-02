@@ -4,7 +4,7 @@ export default async function EventDashboardPage({ params }) {
   const { eventId } = await params;
 
   return (
-    <div className="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-8">
+    <div className="bg-white min-h-screen flex flex-col items-center justify-center p-8">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-gray-800 mb-8">
           Event Dashboard

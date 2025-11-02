@@ -30,7 +30,7 @@ export default async function RootLayout({ children }) {
           <div className="hidden md:block">
             <DesktopNavbar />
           </div>
-          <main className="p-4 md:p-8">{children}</main>
+          <main>{children}</main>
         </div>
       </body>
     </html>
