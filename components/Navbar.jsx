@@ -7,15 +7,18 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="bg-blue-600 text-white shadow-lg">
+    <nav className="bg-white text-gray-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold">YPIT Check-In App</h1>
+            {/* You can replace this with an actual Image component for your logo */}
+            <h1 className="text-3xl font-bold text-theme-primary">
+              Events Ting
+            </h1>
           </div>
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center space-x-8">
             <form action={handleLogout}>
-              <button className="btn !bg-red-500 !hover:bg-red-600">
+              <button className="bg-theme-primary text-white px-4 py-2 rounded-md hover:bg-theme-primary_dark">
                 Logout
               </button>
             </form>
@@ -23,7 +26,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-theme-primary_focus"
             >
               <span className="sr-only">Open main menu</span>
               {/* Hamburger Icon */}
@@ -64,7 +67,7 @@ const Navbar = () => {
       <div className={`${isMenuOpen ? "block" : "hidden"} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <form action={handleLogout}>
-            <button className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-white bg-red-500 hover:bg-red-600">
+            <button className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-white bg-theme-primary hover:bg-theme-primary_dark">
               Logout
             </button>
           </form>

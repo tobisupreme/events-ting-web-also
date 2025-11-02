@@ -11,7 +11,7 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
           {checkedIn ? (
             <>
               <svg
-                className="mx-auto w-10 h-10 text-green-500"
+                className="mx-auto w-10 h-10 text-theme-primary"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -25,7 +25,7 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <h1 className="text-2xl font-bold text-green-500">Success</h1>
+              <h1 className="text-2xl font-bold text-theme-primary">Success</h1>
               <p className="text-lg text-gray-600">
                 Ticket has been checked in successfully!
               </p>
@@ -33,7 +33,7 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
           ) : (
             <>
               <svg
-                className="mx-auto w-10 h-10 text-green-500"
+                className="mx-auto w-10 h-10 text-theme-primary"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -47,7 +47,9 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <h1 className="text-2xl font-bold text-green-500">Ticket Found</h1>
+              <h1 className="text-2xl font-bold text-theme-primary">
+                Ticket Found
+              </h1>
               <p className="text-lg text-gray-600">
                 Please confirm the check in for this ticket
               </p>
@@ -59,7 +61,7 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
 
             {!checkedIn ? (
               <button
-                className="btn !bg-green-500 my-5"
+                className="btn !bg-theme-primary !hover:bg-theme-primary_dark my-5"
                 onClick={async () => {
                   setIsLoading(true);
                   await handleCheckin();
@@ -152,8 +154,10 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
                   </svg>
                   <span>
                     This person has{" "}
-                    {result.data.tickets.filter((e) => e.status === "Pending").length}
-                    {" "}
+                    {
+                      result.data.tickets.filter((e) => e.status === "Pending")
+                        .length
+                    }{" "}
                     more available tickets.
                   </span>
                 </div>

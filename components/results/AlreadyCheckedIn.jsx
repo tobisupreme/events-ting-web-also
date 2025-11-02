@@ -65,7 +65,7 @@ const AlreadyCheckedIn = ({ result, ticketId, handleCheckin, checkedIn }) => {
 
               {!checkedIn ? (
                 <button
-                  className="btn !bg-green-500 my-5"
+                  className="btn !bg-theme-primary !hover:bg-theme-primary_dark my-5"
                   onClick={async () => {
                     setIsLoading(true);
                     await handleCheckin();

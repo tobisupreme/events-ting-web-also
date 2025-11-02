@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
 import { handleLogin } from "@/app/actions";
+import { useFormState, useFormStatus } from "react-dom";
 
 const initialState = {};
 
@@ -10,7 +10,7 @@ function SubmitButton() {
 
   return (
     <button
-      className="btn !text-white !bg-blue-600 !hover:bg-blue-700"
+      className="btn !text-white !bg-theme-primary !hover:bg-theme-primary_dark"
       type="submit"
       disabled={pending}
     >
@@ -25,7 +25,10 @@ export function LoginForm() {
   return (
     <form action={formAction}>
       {state?.error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+        >
           <span className="block sm:inline">{state.error}</span>
         </div>
       )}

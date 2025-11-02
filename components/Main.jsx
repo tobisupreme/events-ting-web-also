@@ -72,8 +72,8 @@ const Main = () => {
           />
           <button
             className={`btn !text-white ${
-              !emailOrTicketId.trim() ? "!bg-gray-400" : "!bg-blue-600"
-            } !hover:bg-blue-700 whitespace-nowrap`}
+              !emailOrTicketId.trim() ? "!bg-gray-400" : "!bg-theme-primary"
+            } !hover:bg-theme-primary_dark whitespace-nowrap`}
             onClick={onSubmit}
             disabled={!emailOrTicketId.trim()}
           >
@@ -96,7 +96,7 @@ const Main = () => {
               <div className="flex justify-center" role="status">
                 <svg
                   aria-hidden="true"
-                  className="w-8 h-8 text-gray-200 animate-spin fill-blue-600"
+                  className="w-8 h-8 text-gray-200 animate-spin fill-theme-primary"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
