@@ -1,84 +1,103 @@
 "use client";
 
 import { handleLogout } from "@/app/actions/logout";
+import { Calendar, LogOut, Menu, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const CalendarIcon = ({ size = 20 }) => <Calendar size={size} />;
+const LogoutIcon = ({ size = 20 }) => <LogOut size={size} />;
+const MenuIcon = ({ size = 24 }) => <Menu size={size} />;
+const CloseIcon = ({ size = 24 }) => <X size={size} />;
+
+const NavItem = ({ href, icon, children, active }) => (
+  <Link href={href}>
+    <div
+      className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors ${
+        active
+          ? "bg-purple-100 text-theme-primary font-bold"
+          : "hover:bg-gray-100"
+      }`}
+    >
+      <div className="mr-3">{icon}</div>
+      <span>{children}</span>
+    </div>
+  </Link>
+);
+
+export const DesktopNavbar = () => (
+  <aside className="h-screen fixed w-[250px] bg-white border-r border-gray-200 flex flex-col p-4">
+    <div className="flex-shrink-0 mb-10">
+      <Link href="/events">
+        <h1 className="text-3xl font-bold text-theme-primary hover:opacity-80 transition-opacity px-3">
+          Events Ting
+        </h1>
+      </Link>
+    </div>
+    <nav className="flex-grow">
+      <NavItem href="/events" icon={<CalendarIcon />} active={true}>
+        Events
+      </NavItem>
+    </nav>
+    <div className="flex-shrink-0">
+      <form action={handleLogout}>
+        <button type="submit" className="w-full">
+          <div className="flex items-center p-3 rounded-lg cursor-pointer transition-colors text-red-600 hover:bg-red-50">
+            <div className="mr-3">
+              <LogoutIcon />
+            </div>
+            <span>Logout</span>
+          </div>
+        </button>
+      </form>
+    </div>
+  </aside>
+);
+
+export const MobileNavbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white text-gray-800 shadow-md relative">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-20">
-          <div className="flex-shrink-0">
-            {/* You can replace this with an actual Image component for your logo */}
-            <h1 className="text-3xl font-bold text-theme-primary">
-              Events Ting
-            </h1>
+    <header className="md:hidden bg-white sticky top-0 z-10">
+      <div className="flex justify-between items-center p-4">
+        <Link href="/events">
+          <h1 className="text-2xl font-bold text-theme-primary">Events Ting</h1>
+        </Link>
+        <button onClick={() => setIsOpen(true)}>
+          <MenuIcon />
+        </button>
+      </div>
+      {isOpen && (
+        <nav className="fixed inset-0 bg-white z-50 flex flex-col p-4">
+          <div className="flex justify-between items-center mb-8">
+            <Link href="/events">
+              <h1 className="text-2xl font-bold text-theme-primary">
+                Events Ting
+              </h1>
+            </Link>
+            <button onClick={() => setIsOpen(false)}>
+              <CloseIcon />
+            </button>
           </div>
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="flex-grow">
+            <NavItem href="/events" icon={<CalendarIcon />} active={true}>
+              Events
+            </NavItem>
+          </div>
+          <div className="flex-shrink-0">
             <form action={handleLogout}>
-              <button className="bg-theme-primary text-white px-4 py-2 rounded-md hover:bg-theme-primary_dark">
-                Logout
+              <button type="submit" className="w-full">
+                <div className="flex items-center p-3 rounded-lg cursor-pointer transition-colors text-red-600 hover:bg-red-50">
+                  <div className="mr-3">
+                    <LogoutIcon />
+                  </div>
+                  <span>Logout</span>
+                </div>
               </button>
             </form>
           </div>
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-theme-primary_focus"
-            >
-              <span className="sr-only">Open main menu</span>
-              {/* Hamburger Icon */}
-              <svg
-                className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-              {/* Close Icon */}
-              <svg
-                className={`${isMenuOpen ? "block" : "hidden"} h-6 w-6`}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Mobile Menu */}
-      <div
-        className={`${
-          isMenuOpen ? "block" : "hidden"
-        } md:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-50`}
-      >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <form action={handleLogout}>
-            <button className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-white bg-theme-primary hover:bg-theme-primary_dark">
-              Logout
-            </button>
-          </form>
-        </div>
-      </div>
-    </nav>
+        </nav>
+      )}
+    </header>
   );
 };
-
-export default Navbar;
