@@ -4,7 +4,7 @@ import Error from "./results/Error";
 import NoTicketFound from "./results/NoTicketFound";
 import Success from "./results/Success";
 
-const ResultContainer = ({ result, emailOrTicketId }) => {
+const ResultContainer = ({ result, emailOrTicketId, eventId }) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const isEmail = emailRegex.test(emailOrTicketId);
 
@@ -21,18 +21,15 @@ const ResultContainer = ({ result, emailOrTicketId }) => {
   const ticketId = isEmail ? pendingTicket?.ticketId : emailOrTicketId;
 
   const handleCheckin = async () => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/events/${process.env.NEXT_PUBLIC_EVENT_ID}/registrations/${ticketId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: "Confirmed",
-        }),
-      }
-    );
+    const response = await fetch(urls.checkIn(eventId, ticketId), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "Confirmed",
+      }),
+    });
     const data = await response.json();
     console.log(data);
     setCheckedIn(true);

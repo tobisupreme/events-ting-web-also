@@ -5,7 +5,7 @@ import ScannerContainer from "@/components/ScannerContainer";
 import { urls } from "@/lib/urls";
 import { useState } from "react";
 
-const Main = () => {
+const Main = ({ eventId }) => {
   const [emailOrTicketId, setEmailOrTicketId] = useState("");
   const [resultContainerVisible, setResultContainerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,7 @@ const Main = () => {
     setIsLoading(true);
     setResultContainerVisible(true);
 
-    const response = await fetch(urls.getRegistration(decodedText));
+    const response = await fetch(urls.getRegistration(eventId, decodedText));
     const data = await response.json();
 
     if (data) {
@@ -31,7 +31,7 @@ const Main = () => {
 
     const normalisedEmailOrTicketId = emailOrTicketId?.trim().toLowerCase();
     const response = await fetch(
-      urls.getRegistration(normalisedEmailOrTicketId)
+      urls.getRegistration(eventId, normalisedEmailOrTicketId)
     );
     const data = await response.json();
 
@@ -116,6 +116,7 @@ const Main = () => {
                 <ResultContainer
                   result={result}
                   emailOrTicketId={emailOrTicketId}
+                  eventId={eventId}
                 />
               )
             )}
