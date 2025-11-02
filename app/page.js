@@ -10,10 +10,17 @@ export default async function Home() {
 
   if (!session || !isSessionVerified) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-bold mb-4">Login</h2>
-          <LoginForm />
+      <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+        <div
+          className="hidden md:block bg-cover bg-center"
+          style={{ backgroundImage: "url('https://picsum.photos/1200/800')" }}
+        >
+          {/* Background Image Column */}
+        </div>
+        <div className="flex flex-col justify-center items-center p-8 bg-white">
+          <div className="w-full max-w-md">
+            <LoginForm />
+          </div>
         </div>
       </div>
     );
