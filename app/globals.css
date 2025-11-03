@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+#html5qr-code-full-region > button {
+  @apply btn !text-white !bg-theme-primary;
+}
+
+#html5qr-code-full-region > button:hover {
+  @apply !bg-theme-primary_dark;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -21,22 +29,23 @@ body {
 }
 
 #html5qr-code-full-region {
-  @apply !border-0
+  @apply !border-0;
 }
 #html5qr-code-full-region #html5qr-code-full-region__scan_region {
-  @apply flex justify-center items-center
+  @apply flex justify-center items-center;
 }
-#html5qr-code-full-region__dashboard_section_csr button, .btn {
-  @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+#html5qr-code-full-region__dashboard_section_csr button,
+.btn {
+  @apply bg-theme-primary text-white font-bold py-2 px-4 rounded;
 }
 #html5qr-code-full-region__dashboard_section_csr span {
   @apply inline-block my-1;
 }
 #html5qr-code-full-region__dashboard_section_csr button:hover {
-  @apply bg-blue-700;
+  @apply bg-theme-primary_dark;
 }
 select#html5-qrcode-select-camera {
-  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5
+  @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-theme-primary_focus focus:border-theme-primary_focus p-2.5;
 }
 #html5-qrcode-anchor-scan-type-change {
   @apply inline-block my-1;

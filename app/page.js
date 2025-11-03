@@ -1,39 +1,28 @@
-import Main from "@/components/Main";
+import { LoginForm } from "@/components/LoginForm";
 import { cookies } from "next/headers";
-import { handleTokenSubmit, verifyToken } from "./actions";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("ypitScannerAccessToken");
-  const isTokenVerified = await verifyToken(accessToken?.value);
+  const session = cookieStore.get("eventsTingAuthToken");
 
-  console.log(accessToken);
+  if (session) {
+    redirect("/events");
+  }
 
-  if (!accessToken || !isTokenVerified) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-          <h2 className="text-xl font-bold mb-4">Enter Access Token</h2>
-          <form action={handleTokenSubmit}>
-            <input
-              type="password"
-              className="border p-2 mb-4 w-full text-center"
-              id="token"
-              name="token"
-            />
-            <button
-              className="btn !text-white !bg-blue-600 !hover:bg-blue-700"
-              type="submit"
-            >
-              Submit
-            </button>
-          </form>
+  return (
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+      <div
+        className="hidden md:block bg-cover bg-center"
+        style={{ backgroundImage: "url('https://picsum.photos/1200/800')" }}
+      >
+        {/* Background Image Column */}
+      </div>
+      <div className="flex flex-col justify-center items-center p-8 bg-white">
+        <div className="w-full max-w-md">
+          <LoginForm />
         </div>
       </div>
-    );
-  }
-  
-  return (
-    <Main />
-  )
+    </div>
+  );
 }
