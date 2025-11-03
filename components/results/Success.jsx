@@ -57,7 +57,7 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
           )}
           <div>
             <hr className="my-5 w-[80vw]" />
-            <UserInfo user={result.data.user} ticketId={ticketId} />
+            <UserInfo user={result.data.attendee} ticketId={ticketId} />
 
             {!checkedIn ? (
               <button

@@ -29,7 +29,7 @@ const AlreadyCheckedIn = ({ result, ticketId, handleCheckin, checkedIn }) => {
           </p>
         </div>
         <hr className="my-5 w-[80vw]" />
-        <UserInfo user={result.data.user} ticketId={ticketId} />
+        <UserInfo user={result.data.attendee} ticketId={ticketId} />
 
         {result.data.tickets.length > 1 &&
           result.data.tickets.filter((e) => e.status === "Pending").length >

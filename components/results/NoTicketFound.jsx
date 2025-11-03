@@ -28,7 +28,7 @@ const NoTicketFound = ({ result }) => {
           </p>
         </div>
         <hr className="my-5 w-[80vw]" />
-        <UserInfo user={result.data.user} />
+        <UserInfo user={result.data.attendee} />
 
         {result.data.tickets.length > 0 && (
           <div className="border border-dotted rounded p-4 !mt-5">
