@@ -46,18 +46,20 @@ const EventCard = ({ event }) => {
           </div>
         )}
 
-        <div className="ml-4 flex-grow">
-          <h4 className="text-xl font-bold text-theme-primary mb-2">
+        <div className="ml-4 flex-grow space-y-2">
+          <div className="flex justify-between items-center mb-1">
+            <span className="inline-block bg-purple-100 text-purple-600 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+              {event.type}
+            </span>
+            {/* Placeholder for future management icons */}
+            <div className="flex space-x-2"></div>
+          </div>
+          <h3 className="text-base font-bold text-theme-primary mb-1">
             {event.name}
-          </h4>
-
-          <p className="text-gray-600 mb-1">{startDate}</p>
-
-          <p className="text-gray-500 mb-4">
-            {event.venue} ({event.type})
-          </p>
-
-          <span className="inline-block bg-purple-100 text-purple-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
+          </h3>
+          <p className="text-sm text-gray-500 mb-1">{startDate}</p>
+          <p className="text-sm text-gray-500 mb-4">{event.venue}</p>
+          <span className="inline-block bg-gray-100 text-gray-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
             {event.organizer}
           </span>
         </div>
