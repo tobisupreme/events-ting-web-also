@@ -1,24 +1,25 @@
+import api from "@/lib/api";
 import { urls } from "@/lib/urls";
 import { cookies } from "next/headers";
 import Link from "next/link";
+
+export const dynamic = "force-dynamic";
 
 async function getEvents() {
   const cookieStore = await cookies();
   const token = cookieStore.get("eventsTingAuthToken");
 
-  const res = await fetch(urls.getAllEvents, {
-    headers: {
-      Authorization: `Bearer ${token?.value}`,
-    },
-  });
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
+  try {
+    const response = await api.get(urls.getAllEvents, {
+      headers: {
+        Authorization: `Bearer ${token?.value}`,
+      },
+    });
+    return response.data.data.rows;
+  } catch (error) {
+    console.error("Failed to fetch events:", error);
     throw new Error("Failed to fetch events");
   }
-
-  const json = await res.json();
-  return json.data.rows;
 }
 
 const EventCard = ({ event }) => {

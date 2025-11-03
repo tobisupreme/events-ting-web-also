@@ -2,8 +2,8 @@
 
 import ResultContainer from "@/components/ResultContainer";
 import ScannerContainer from "@/components/ScannerContainer";
-import { urls } from "@/lib/urls";
 import { useState } from "react";
+import api from "../lib/api";
 
 const Main = ({ eventId }) => {
   const [emailOrTicketId, setEmailOrTicketId] = useState("");
@@ -16,13 +16,19 @@ const Main = ({ eventId }) => {
     setIsLoading(true);
     setResultContainerVisible(true);
 
-    const response = await fetch(urls.getRegistration(eventId, decodedText));
-    const data = await response.json();
-
-    if (data) {
-      setResult(data);
-      setIsLoading(false);
+    try {
+      const response = await api.get(
+        `/api/registrations/${eventId}/${decodedText}`
+      );
+      setResult(response.data);
+    } catch (error) {
+      console.error("Scan failed:", error);
+      setResult({
+        status: "error",
+        error: error.response?.data?.message || "Invalid server response.",
+      });
     }
+    setIsLoading(false);
   };
 
   const onSubmit = async () => {
@@ -30,15 +36,19 @@ const Main = ({ eventId }) => {
     setResultContainerVisible(true);
 
     const normalisedEmailOrTicketId = emailOrTicketId?.trim().toLowerCase();
-    const response = await fetch(
-      urls.getRegistration(eventId, normalisedEmailOrTicketId)
-    );
-    const data = await response.json();
-
-    if (data) {
-      setResult(data);
-      setIsLoading(false);
+    try {
+      const response = await api.get(
+        `/api/registrations/${eventId}/${normalisedEmailOrTicketId}`
+      );
+      setResult(response.data);
+    } catch (error) {
+      console.error("Search failed:", error);
+      setResult({
+        status: "error",
+        error: error.response?.data?.message || "Invalid server response.",
+      });
     }
+    setIsLoading(false);
   };
 
   return (

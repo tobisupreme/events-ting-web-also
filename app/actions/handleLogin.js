@@ -1,5 +1,6 @@
 "use server";
 
+import api from "@/lib/api";
 import { urls } from "@/lib/urls";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -9,20 +10,9 @@ export async function handleLogin(prevState, formData) {
   const password = formData.get("password");
 
   try {
-    const response = await fetch(urls.login, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": true,
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    const response = await api.post(urls.login, { email, password });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return { error: data.message || "Login failed. Please try again." };
-    }
+    const data = response.data;
 
     (await cookies()).set({
       name: "eventsTingAuthToken",
@@ -33,6 +23,11 @@ export async function handleLogin(prevState, formData) {
     });
   } catch (error) {
     console.error(error);
+    if (error.response) {
+      return {
+        error: error.response.data.message || "Login failed. Please try again.",
+      };
+    }
     return { error: "An unexpected error occurred. Please try again." };
   }
 

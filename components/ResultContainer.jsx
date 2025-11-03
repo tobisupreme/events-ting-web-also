@@ -1,3 +1,4 @@
+import api from "@/lib/api";
 import { useState } from "react";
 import AlreadyCheckedIn from "./results/AlreadyCheckedIn";
 import Error from "./results/Error";
@@ -21,18 +22,12 @@ const ResultContainer = ({ result, emailOrTicketId, eventId }) => {
   const ticketId = isEmail ? pendingTicket?.ticketId : emailOrTicketId;
 
   const handleCheckin = async () => {
-    const response = await fetch(urls.checkIn(eventId, ticketId), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: "Confirmed",
-      }),
-    });
-    const data = await response.json();
-    console.log(data);
-    setCheckedIn(true);
+    try {
+      await api.post(`/api/registrations/${eventId}/${ticketId}`);
+      setCheckedIn(true);
+    } catch (error) {
+      console.error("Check-in failed:", error);
+    }
   };
 
   if ((isEmail && !pendingTicket) || !ticket) {
