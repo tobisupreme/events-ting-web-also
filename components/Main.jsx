@@ -1,9 +1,17 @@
 "use client";
 
 import ResultContainer from "@/components/ResultContainer";
-import ScannerContainer from "@/components/ScannerContainer";
+import api from "@/lib/api";
+import dynamic from "next/dynamic";
 import { useState } from "react";
-import api from "../lib/api";
+
+const DynamicScannerContainer = dynamic(
+  () => import("@/components/ScannerContainer"),
+  {
+    ssr: false,
+    loading: () => <p>Loading scanner...</p>,
+  }
+);
 
 const Main = ({ eventId }) => {
   const [emailOrTicketId, setEmailOrTicketId] = useState("");
@@ -54,7 +62,7 @@ const Main = ({ eventId }) => {
   return (
     <div className="w-full h-screen flex flex-col">
       <section className="flex flex-col grow md:items-center justify-center">
-        <ScannerContainer
+        <DynamicScannerContainer
           fps={10}
           qrbox={250}
           disableFlip={false}
