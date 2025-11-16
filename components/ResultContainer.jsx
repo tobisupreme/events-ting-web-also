@@ -12,7 +12,7 @@ const ResultContainer = ({ result, emailOrTicketId, eventId }) => {
   const [checkedIn, setCheckedIn] = useState(false);
 
   if (result.status === "error") {
-    return <Error error={result.error} />;
+    return <Error error={result.error} statusCode={result.statusCode} />;
   }
 
   const pendingTicket = result.data.tickets.find((e) => e.status === "Pending");

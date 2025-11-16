@@ -2,10 +2,10 @@
 
 import ResultContainer from "@/components/ResultContainer";
 import api from "@/lib/api";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const DynamicScannerContainer = dynamic(
   () => import("@/components/ScannerContainer"),
@@ -20,6 +20,40 @@ const Main = ({ eventId }) => {
   const [resultContainerVisible, setResultContainerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
+
+  const closeModal = () => {
+    setResultContainerVisible(false);
+  };
+
+  // Handle browser back button
+  useEffect(() => {
+    if (resultContainerVisible) {
+      // Push a new state when modal opens
+      window.history.pushState({ modalOpen: true }, "");
+
+      const handlePopState = () => {
+        closeModal();
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }
+  }, [resultContainerVisible]);
+
+  // Handle Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && resultContainerVisible) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [resultContainerVisible]);
 
   const onNewScanResult = async (decodedText, decodedResult) => {
     setEmailOrTicketId(decodedText);
@@ -36,6 +70,7 @@ const Main = ({ eventId }) => {
       setResult({
         status: "error",
         error: error.response?.data?.message || "Invalid server response.",
+        statusCode: error.response?.status,
       });
     }
     setIsLoading(false);
@@ -56,6 +91,7 @@ const Main = ({ eventId }) => {
       setResult({
         status: "error",
         error: error.response?.data?.message || "Invalid server response.",
+        statusCode: error.response?.status,
       });
     }
     setIsLoading(false);
@@ -149,15 +185,26 @@ const Main = ({ eventId }) => {
         className={`${
           resultContainerVisible ? "fixed" : "hidden"
         } z-50 inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-end sm:items-center`}
+        onClick={closeModal}
       >
         <div
           className={`${
             resultContainerVisible
               ? "translate-y-0 opacity-100"
               : "translate-y-full opacity-0"
-          } w-full sm:max-w-2xl sm:mx-4 max-h-[85vh] flex flex-col bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-2xl p-6 md:p-8 transition-all ease-out duration-300 shadow-2xl`}
+          } w-full sm:max-w-2xl sm:mx-4 max-h-[85vh] flex flex-col bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-2xl p-6 md:p-8 transition-all ease-out duration-300 shadow-2xl relative`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex-1 overflow-y-auto">
+          {/* Close Button */}
+          <button
+            onClick={closeModal}
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Close modal"
+          >
+            <X size={24} className="text-gray-500 dark:text-gray-400" />
+          </button>
+
+          <div className="flex-1 overflow-y-auto mt-8">
             {isLoading ? (
               <div
                 className="flex justify-center items-center py-12"
@@ -195,7 +242,7 @@ const Main = ({ eventId }) => {
           <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               className="w-full px-6 py-3 text-gray-700 dark:text-gray-300 bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
-              onClick={() => setResultContainerVisible(false)}
+              onClick={closeModal}
             >
               New Scan
             </button>
