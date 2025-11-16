@@ -1,6 +1,6 @@
 import api from "@/lib/api";
 import { urls } from "@/lib/urls";
-import { Calendar, ChevronLeft, Clock, MapPin } from "lucide-react";
+import { Calendar, ChevronLeft, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -50,45 +50,144 @@ export default async function EventDashboardPage({ params }) {
     day: "numeric",
   });
 
+  const now = new Date();
+  const isUpcoming = new Date(event.startDate) > now;
+  const isPast = new Date(event.endDate || undefined) < now;
+  const isOngoing = !isUpcoming && !isPast;
+
   return (
-    <div className="bg-white min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto space-y-8">
         <Link href="/events">
-          <div className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8">
+          <div className="inline-flex items-center text-gray-600 hover:text-theme-primary dark:text-gray-400 dark:hover:text-theme-primary_focus transition-colors">
             <ChevronLeft size={20} className="mr-1" />
-            Back
+            <span className="font-medium">Back to Events</span>
           </div>
         </Link>
 
-        <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        {/* Header Section */}
+        <div className="space-y-4">
+          {/* Status Badges */}
+          <div className="flex flex-wrap gap-2">
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                isUpcoming
+                  ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200"
+                  : isOngoing
+                  ? "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-200"
+                  : "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
+              }`}
+            >
+              {isUpcoming ? "Upcoming" : isOngoing ? "Live" : "Past"}
+            </span>
+            <span className="inline-block bg-theme-primary/10 text-theme-primary dark:bg-theme-primary/20 dark:text-theme-primary_focus px-3 py-1 rounded-full text-xs font-semibold">
+              {event.type}
+            </span>
+          </div>
+
+          {/* Event Title */}
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
             {event.name}
           </h1>
-          <div className="space-y-3 text-gray-600">
-            <div className="flex items-center">
-              <Calendar size={20} className="mr-3" />
-              <span>{eventDate}</span>
+
+          {/* Organizer Info */}
+          {event.organizer && (
+            <div className="flex items-center gap-3">
+              <div className="bg-theme-primary/10 text-theme-primary dark:bg-theme-primary/20 dark:text-theme-primary_focus flex h-10 w-10 items-center justify-center rounded-full font-semibold">
+                {event.organizer?.[0]?.toUpperCase() ?? "?"}
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Organized by
+                </p>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {event.organizer}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center">
-              <Clock size={20} className="mr-3" />
-              <span>{formatEventTime(event.startDate, event.endDate)}</span>
+          )}
+        </div>
+
+        {/* Event Details Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Event Details
+          </h2>
+
+          <div className="space-y-4">
+            {/* Date */}
+            <div className="flex items-start gap-3">
+              <Calendar
+                size={20}
+                className="mt-0.5 text-gray-400 dark:text-gray-500 flex-shrink-0"
+              />
+              <div>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {eventDate}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {formatEventTime(event.startDate, event.endDate)}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center">
-              <MapPin size={20} className="mr-3" />
-              <span>{event.venue}</span>
+
+            {/* Location */}
+            <div className="flex items-start gap-3">
+              <MapPin
+                size={20}
+                className="mt-0.5 text-gray-400 dark:text-gray-500 flex-shrink-0"
+              />
+              <div>
+                <p className="font-medium text-gray-900 dark:text-white">
+                  {event.venue}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <hr className="my-8" />
+        {/* Actions Card */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+            Event Management
+          </h2>
 
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Actions</h2>
-          <Link href={`/events/${eventId}/check-in`}>
-            <div className="inline-block bg-theme-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-theme-primary_dark transition-colors">
-              Check-in Attendees
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Link href={`/events/${eventId}/check-in`}>
+              <div className="group bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                <div className="flex items-center gap-3">
+                  <svg
+                    className="w-8 h-8 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      Check-in Attendees
+                    </h3>
+                    <p className="text-sm text-white/80">
+                      Scan tickets and verify registrations
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+
+            {/* Placeholder for future actions */}
+            <div className="bg-gray-50 dark:bg-gray-700/50 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 flex items-center justify-center">
+              <p className="text-gray-400 dark:text-gray-500 text-sm text-center">
+                More actions coming soon
+              </p>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </div>
