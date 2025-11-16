@@ -20,6 +20,8 @@ const createConfig = (props) => {
     if (props.disableFlip !== undefined) {
         config.disableFlip = props.disableFlip;
     }
+
+    config.aspectRatio = 1.0;
     return config;
 };
 
