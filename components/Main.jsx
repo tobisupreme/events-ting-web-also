@@ -2,8 +2,10 @@
 
 import ResultContainer from "@/components/ResultContainer";
 import api from "@/lib/api";
+import { ChevronLeft, X } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const DynamicScannerContainer = dynamic(
   () => import("@/components/ScannerContainer"),
@@ -18,6 +20,49 @@ const Main = ({ eventId }) => {
   const [resultContainerVisible, setResultContainerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [isFullscreenScannerOpen, setIsFullscreenScannerOpen] = useState(false);
+
+  const closeModal = () => {
+    setResultContainerVisible(false);
+  };
+
+  const openFullscreenScanner = () => {
+    setIsFullscreenScannerOpen(true);
+  };
+
+  const closeFullscreenScanner = () => {
+    setIsFullscreenScannerOpen(false);
+  };
+
+  // Handle browser back button
+  useEffect(() => {
+    if (resultContainerVisible) {
+      // Push a new state when modal opens
+      window.history.pushState({ modalOpen: true }, "");
+
+      const handlePopState = () => {
+        closeModal();
+      };
+
+      window.addEventListener("popstate", handlePopState);
+
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+    }
+  }, [resultContainerVisible]);
+
+  // Handle Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && resultContainerVisible) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [resultContainerVisible]);
 
   const onNewScanResult = async (decodedText, decodedResult) => {
     setEmailOrTicketId(decodedText);
@@ -34,6 +79,7 @@ const Main = ({ eventId }) => {
       setResult({
         status: "error",
         error: error.response?.data?.message || "Invalid server response.",
+        statusCode: error.response?.status,
       });
     }
     setIsLoading(false);
@@ -54,66 +100,185 @@ const Main = ({ eventId }) => {
       setResult({
         status: "error",
         error: error.response?.data?.message || "Invalid server response.",
+        statusCode: error.response?.status,
       });
     }
     setIsLoading(false);
   };
 
   return (
-    <div className="w-full h-screen flex flex-col">
-      <section className="flex flex-col grow md:items-center justify-center">
-        <DynamicScannerContainer
-          fps={10}
-          qrbox={250}
-          disableFlip={false}
-          qrCodeSuccessCallback={onNewScanResult}
-          showTorchButtonIfSupported={true}
-        />
-
-        <div className="relative mx-auto my-10 w-[50vw]">
-          <hr className="w-full" />
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-2 md:py-4 flex-shrink-0">
+        <div className="container mx-auto px-4">
+          <Link href={`/events/${eventId}`}>
+            <div className="inline-flex items-center text-gray-600 hover:text-theme-primary dark:text-gray-400 dark:hover:text-theme-primary_focus transition-colors text-sm md:text-base">
+              <ChevronLeft size={18} className="mr-1" />
+              <span className="font-medium">Back</span>
+            </div>
+          </Link>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-2">
+            Event Check-in
+          </h1>
+          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400 mt-1 hidden md:block">
+            Scan QR codes or search by ticket ID or email address
+          </p>
         </div>
+      </div>
 
-        <div className="mx-auto flex flex-wrap md:flex-nowrap items-center justify-center w-[90%] md:w-2/5 gap-4">
-          <input
-            type="text"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="Ticket ID or Email Address"
-            required
-            onChange={(e) => setEmailOrTicketId(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && emailOrTicketId.trim()) {
-                onSubmit();
-              }
-            }}
-          />
-          <button
-            className={`btn !text-white ${
-              !emailOrTicketId.trim() ? "!bg-gray-400" : "!bg-theme-primary"
-            } !hover:bg-theme-primary_dark whitespace-nowrap`}
-            onClick={onSubmit}
-            disabled={!emailOrTicketId.trim()}
-          >
-            Search Ticket
-          </button>
+      <section className="flex-1 overflow-auto">
+        <div className="container mx-auto px-3 md:px-4 py-4 md:py-8">
+          <div className="max-w-2xl mx-auto flex flex-col gap-4 md:gap-6">
+            {/* QR Scan Button */}
+            <button
+              onClick={openFullscreenScanner}
+              className="w-full bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-6 md:p-8 hover:shadow-lg transition-all duration-300 group"
+            >
+              <div className="flex flex-col items-center gap-3">
+                <svg
+                  className="w-16 h-16 md:w-20 md:h-20"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                  />
+                </svg>
+                <div className="text-center">
+                  <h2 className="text-xl md:text-2xl font-bold">
+                    Scan QR Code
+                  </h2>
+                  <p className="text-sm md:text-base text-white/80 mt-1">
+                    Open camera to scan ticket
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            {/* Divider */}
+            <div className="relative py-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 font-medium">
+                  OR
+                </span>
+              </div>
+            </div>
+
+            {/* Manual Search Card */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6 shadow-sm">
+              <h2 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-2 md:mb-4">
+                Manual Lookup
+              </h2>
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+                <input
+                  type="text"
+                  className="flex-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-theme-primary focus:border-theme-primary block w-full p-2.5 md:p-3 placeholder-gray-500 dark:placeholder-gray-400"
+                  placeholder="Ticket ID or Email"
+                  required
+                  value={emailOrTicketId}
+                  onChange={(e) => setEmailOrTicketId(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && emailOrTicketId.trim()) {
+                      onSubmit();
+                    }
+                  }}
+                />
+                <button
+                  className={`px-4 md:px-6 py-2.5 md:py-3 rounded-lg font-semibold text-white text-sm md:text-base transition-all duration-200 whitespace-nowrap ${
+                    !emailOrTicketId.trim()
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-gradient-to-br from-theme-primary to-theme-primary_dark hover:shadow-lg"
+                  }`}
+                  onClick={onSubmit}
+                  disabled={!emailOrTicketId.trim()}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
+      {/* Fullscreen Scanner Overlay */}
+      {isFullscreenScannerOpen && (
+        <section className="fixed inset-0 z-50 bg-black flex flex-col">
+          {/* Scanner Header */}
+          <div className="flex items-center justify-between p-4 bg-black/50">
+            <h2 className="text-white text-lg font-semibold">Scan QR Code</h2>
+            <button
+              onClick={closeFullscreenScanner}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              aria-label="Close scanner"
+            >
+              <X size={24} className="text-white" />
+            </button>
+          </div>
+
+          {/* Scanner Area */}
+          <div className="flex-1 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
+              <DynamicScannerContainer
+                fps={10}
+                qrbox={300}
+                disableFlip={false}
+                qrCodeSuccessCallback={(decodedText, decodedResult) => {
+                  closeFullscreenScanner();
+                  onNewScanResult(decodedText, decodedResult);
+                }}
+                showTorchButtonIfSupported={true}
+              />
+            </div>
+          </div>
+
+          {/* Helper Text */}
+          <div className="p-6 bg-black/50 text-center">
+            <p className="text-white/80 text-sm">
+              Point your camera at a QR code to scan
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* Results Modal */}
       <section
         className={`${
-          resultContainerVisible ? "absolute" : "hidden"
-        } z-50 bg-black/80 top-0 w-full h-full flex justify-center`}
+          resultContainerVisible ? "fixed" : "hidden"
+        } z-50 inset-0 bg-black/70 backdrop-blur-sm flex justify-center items-end sm:items-center`}
+        onClick={closeModal}
       >
         <div
           className={`${
-            resultContainerVisible ? "top-0" : "top-full"
-          } self-end w-full h-[80%] flex flex-col bg-white rounded-tr-3xl rounded-tl-3xl p-5 md:p-10 delay-300 transition-all ease-out duration-300`}
+            resultContainerVisible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-full opacity-0"
+          } w-full sm:max-w-2xl sm:mx-4 max-h-[85vh] flex flex-col bg-white dark:bg-gray-800 rounded-t-3xl sm:rounded-2xl p-6 md:p-8 transition-all ease-out duration-300 shadow-2xl relative`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div className="grow">
+          {/* Close Button */}
+          <button
+            onClick={closeModal}
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Close modal"
+          >
+            <X size={24} className="text-gray-500 dark:text-gray-400" />
+          </button>
+
+          <div className="flex-1 overflow-y-auto mt-8">
             {isLoading ? (
-              <div className="flex justify-center" role="status">
+              <div
+                className="flex justify-center items-center py-12"
+                role="status"
+              >
                 <svg
                   aria-hidden="true"
-                  className="w-8 h-8 text-gray-200 animate-spin fill-theme-primary"
+                  className="w-12 h-12 text-gray-200 dark:text-gray-700 animate-spin fill-theme-primary"
                   viewBox="0 0 100 101"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -140,12 +305,14 @@ const Main = ({ eventId }) => {
             )}
           </div>
 
-          <button
-            className="btn !text-gray-700 !bg-transparent border border-gray-700 !hover:text-white !hover:background-gray-700"
-            onClick={() => setResultContainerVisible(false)}
-          >
-            New Scan
-          </button>
+          <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+            <button
+              className="w-full px-6 py-3 text-gray-700 dark:text-gray-300 bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+              onClick={closeModal}
+            >
+              New Scan
+            </button>
+          </div>
         </div>
       </section>
     </div>
