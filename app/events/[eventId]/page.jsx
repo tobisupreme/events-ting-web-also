@@ -3,6 +3,7 @@ import { urls } from "@/lib/urls";
 import { Calendar, ChevronLeft, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { getEventStatus } from "../../../lib/eventUtils";
 
 export const dynamic = "force-dynamic";
 
@@ -57,10 +58,10 @@ export default async function EventDashboardPage({ params }) {
     day: "numeric",
   });
 
-  const now = new Date();
-  const isUpcoming = new Date(event.startDate) > now;
-  const isPast = new Date(event.endDate || undefined) < now;
-  const isOngoing = !isUpcoming && !isPast;
+  const { isUpcoming, isOngoing, status } = getEventStatus(
+    event.startDate,
+    event.endDate
+  );
 
   return (
     <div className="container mx-auto px-3 md:px-4 py-4 md:py-8">
@@ -85,7 +86,7 @@ export default async function EventDashboardPage({ params }) {
                   : "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
               }`}
             >
-              {isUpcoming ? "Upcoming" : isOngoing ? "Live" : "Past"}
+              {status}
             </span>
             <span className="inline-block bg-theme-primary/10 text-theme-primary dark:bg-theme-primary/20 dark:text-theme-primary_focus px-2.5 md:px-3 py-1 rounded-full text-xs font-semibold">
               {event.type}

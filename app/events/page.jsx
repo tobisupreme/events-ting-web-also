@@ -2,6 +2,7 @@ import api from "@/lib/api";
 import { urls } from "@/lib/urls";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { getEventStatus } from "../../lib/eventUtils";
 
 export const dynamic = "force-dynamic";
 
@@ -31,10 +32,10 @@ const EventCard = ({ event }) => {
 
   const imageUrl = event.metadata?.image;
 
-  const now = new Date();
-  const isUpcoming = new Date(event.startDate) > now;
-  const isPast = new Date(event.endDate || undefined) < now;
-  const isOngoing = !isUpcoming && !isPast;
+  const { isUpcoming, isOngoing, status } = getEventStatus(
+    event.startDate,
+    event.endDate
+  );
 
   return (
     <Link href={`/events/${event.id}`}>
@@ -81,7 +82,7 @@ const EventCard = ({ event }) => {
                   : "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200"
               }`}
             >
-              {isUpcoming ? "Upcoming" : isOngoing ? "Live" : "Past"}
+              {status}
             </span>
           </div>
         </div>
