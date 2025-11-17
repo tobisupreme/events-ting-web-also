@@ -1,10 +1,10 @@
 import api from "@/lib/api";
 import { urls } from "@/lib/urls";
-import { Calendar, ChevronLeft, MapPin } from "lucide-react";
+import { BarChart3, Calendar, ChevronLeft, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { getEventStatus } from "../../../lib/eventUtils";
 import { cache } from "react";
+import { getEventStatus } from "../../../lib/eventUtils";
 
 // Revalidate every 60 seconds
 export const revalidate = 60;
@@ -204,12 +204,22 @@ export default async function EventDashboardPage({ params }) {
                 </div>
               </Link>
 
-              {/* Placeholder for future actions */}
-              <div className="bg-gray-50 dark:bg-gray-700/50 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 md:p-6 flex items-center justify-center">
-                <p className="text-gray-400 dark:text-gray-500 text-xs md:text-sm text-center">
-                  More actions coming soon
-                </p>
-              </div>
+              {/* Analytics Card */}
+              <Link href={`/events/${eventId}/analytics`}>
+                <div className="group bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-4 md:p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <BarChart3 className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-base md:text-lg">
+                        View Analytics
+                      </h3>
+                      <p className="text-xs md:text-sm text-white/80">
+                        Statistics and check-in insights
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         )}
