@@ -1,3 +1,4 @@
+import { verifySession } from "@/app/actions/verifySession";
 import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
 import ProgressBar from "@/components/analytics/ProgressBar";
 import StatCard from "@/components/analytics/StatCard";
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
 // Revalidate every 60 seconds
@@ -39,6 +41,11 @@ const getEventStats = cache(async (eventId) => {
 });
 
 export default async function EventAnalyticsPage({ params }) {
+  const user = await verifySession();
+  if (!user?.roles?.includes("ADMIN")) {
+    redirect("/events");
+  }
+
   const { eventId } = await params;
   const stats = await getEventStats(eventId);
 

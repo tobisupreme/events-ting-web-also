@@ -1,3 +1,4 @@
+import { verifySession } from "@/app/actions/verifySession";
 import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
 import LeaderboardTable from "@/components/analytics/LeaderboardTable";
 import api from "@/lib/api";
@@ -5,6 +6,7 @@ import { urls } from "@/lib/urls";
 import { Award, ChevronLeft } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
 // Revalidate every 30 seconds (more dynamic)
@@ -47,6 +49,11 @@ const getEventName = cache(async (eventId) => {
 });
 
 export default async function LeaderboardPage({ searchParams }) {
+  const user = await verifySession();
+  if (!user?.roles?.includes("ADMIN")) {
+    redirect("/events");
+  }
+
   const params = await searchParams;
   const leaderboardData = await getLeaderboard(params);
   const eventName = params.eventId ? await getEventName(params.eventId) : null;

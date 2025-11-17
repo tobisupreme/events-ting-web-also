@@ -27,7 +27,7 @@ const NavItem = ({ href, icon, children, active }) => (
   </Link>
 );
 
-export const DesktopNavbar = () => {
+export const DesktopNavbar = ({ user }) => {
   const pathname = usePathname();
 
   return (
@@ -47,13 +47,15 @@ export const DesktopNavbar = () => {
         >
           Events
         </NavItem>
-        <NavItem
-          href="/analytics/summary"
-          icon={<AnalyticsIcon />}
-          active={pathname?.startsWith("/analytics")}
-        >
-          Analytics
-        </NavItem>
+        {user?.roles?.includes("ADMIN") && (
+          <NavItem
+            href="/analytics/summary"
+            icon={<AnalyticsIcon />}
+            active={pathname?.startsWith("/analytics")}
+          >
+            Analytics
+          </NavItem>
+        )}
       </nav>
       <div className="flex-shrink-0">
         <form action={handleLogout}>
@@ -71,7 +73,7 @@ export const DesktopNavbar = () => {
   );
 };
 
-export const MobileNavbar = () => {
+export const MobileNavbar = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -105,13 +107,15 @@ export const MobileNavbar = () => {
             >
               Events
             </NavItem>
-            <NavItem
-              href="/analytics/summary"
-              icon={<AnalyticsIcon />}
-              active={pathname?.startsWith("/analytics")}
-            >
-              Analytics
-            </NavItem>
+            {user?.roles?.includes("ADMIN") && (
+              <NavItem
+                href="/analytics/summary"
+                icon={<AnalyticsIcon />}
+                active={pathname?.startsWith("/analytics")}
+              >
+                Analytics
+              </NavItem>
+            )}
           </div>
           <div className="flex-shrink-0">
             <form action={handleLogout}>

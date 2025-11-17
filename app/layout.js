@@ -1,6 +1,6 @@
 import { DesktopNavbar, MobileNavbar } from "@/components/Navbar";
 import { Inter } from "next/font/google";
-import { cookies } from "next/headers";
+import { verifySession } from "./actions/verifySession";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -11,10 +11,9 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("eventsTingAuthToken");
+  const user = await verifySession();
 
-  if (!session) {
+  if (!user) {
     return (
       <html lang="en">
         <body className={inter.className}>{children}</body>
@@ -25,10 +24,10 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${inter.className} bg-white`}>
-        <MobileNavbar />
+        <MobileNavbar user={user} />
         <div className="md:grid md:grid-cols-[250px_1fr]">
           <div className="hidden md:block">
-            <DesktopNavbar />
+            <DesktopNavbar user={user} />
           </div>
           <main>{children}</main>
         </div>

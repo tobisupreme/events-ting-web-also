@@ -1,3 +1,4 @@
+import { verifySession } from "@/app/actions/verifySession";
 import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
 import RecentActivityList from "@/components/analytics/RecentActivityList";
 import StatCard from "@/components/analytics/StatCard";
@@ -13,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { cache } from "react";
 
 // Revalidate every 60 seconds
@@ -37,6 +39,11 @@ const getAnalyticsSummary = cache(async (searchParams) => {
 });
 
 export default async function AnalyticsSummaryPage({ searchParams }) {
+  const user = await verifySession();
+  if (!user?.roles?.includes("ADMIN")) {
+    redirect("/events");
+  }
+
   const params = await searchParams;
   const summary = await getAnalyticsSummary(params);
 
