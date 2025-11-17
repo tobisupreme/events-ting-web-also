@@ -4,10 +4,24 @@ import { Calendar, ChevronLeft, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { getEventStatus } from "../../../lib/eventUtils";
+import { cache } from "react";
 
-export const dynamic = "force-dynamic";
+// Revalidate every 60 seconds
+export const revalidate = 60;
 
-async function getEvent(eventId) {
+// Pre-generate pages for all events at build time
+export async function generateStaticParams() {
+  try {
+    // We can't use cookies in generateStaticParams, so this is limited
+    // But Next.js will still cache the pages once visited
+    return [];
+  } catch (error) {
+    console.error("Failed to generate static params:", error);
+    return [];
+  }
+}
+
+const getEvent = cache(async (eventId) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("eventsTingAuthToken");
 
@@ -23,7 +37,7 @@ async function getEvent(eventId) {
     console.error("Failed to fetch events:", error);
     throw new Error("Failed to fetch events");
   }
-}
+});
 
 async function isAuthenticated() {
   const cookieStore = await cookies();

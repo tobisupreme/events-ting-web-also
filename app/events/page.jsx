@@ -2,11 +2,13 @@ import api from "@/lib/api";
 import { urls } from "@/lib/urls";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { cache } from "react";
 import { getEventStatus } from "../../lib/eventUtils";
 
-export const dynamic = "force-dynamic";
+// Revalidate every 60 seconds
+export const revalidate = 60;
 
-async function getEvents() {
+const getEvents = cache(async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("eventsTingAuthToken");
 
@@ -21,7 +23,7 @@ async function getEvents() {
     console.error("Failed to fetch events:", error);
     throw new Error("Failed to fetch events");
   }
-}
+});
 
 const EventCard = ({ event }) => {
   const startDate = new Date(event.startDate).toLocaleDateString("en-US", {
