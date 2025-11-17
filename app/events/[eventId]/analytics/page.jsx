@@ -9,11 +9,9 @@ import {
   CheckCircle2,
   ChevronLeft,
   Clock,
-  Target,
   Ticket,
   TrendingUp,
   Users,
-  XCircle,
 } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -149,6 +147,31 @@ export default async function EventAnalyticsPage({ params }) {
           />
         </div>
 
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
+            Quick Actions
+          </h2>
+          <Link href={`/analytics/leaderboard?eventId=${eventId}`}>
+            <div className="bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-4 md:p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Award className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-base md:text-lg">
+                      View Event Leaderboard
+                    </h3>
+                    <p className="text-xs md:text-sm text-white/80">
+                      See top check-in performers for this event
+                    </p>
+                  </div>
+                </div>
+                <ChevronLeft className="w-5 h-5 rotate-180" />
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* Check-in Rate Card */}
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
@@ -189,48 +212,6 @@ export default async function EventAnalyticsPage({ params }) {
               </p>
             </div>
           </div>
-        </div>
-
-        {/* Additional Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <StatCard
-            title="Cancelled Tickets"
-            value={stats.cancelledTickets}
-            icon={XCircle}
-            color="theme-primary"
-          />
-          <StatCard
-            title="Unique Check-in Users"
-            value={stats.uniqueCheckInUsers}
-            icon={Target}
-            color="theme-primary"
-            subtitle="Staff members who performed check-ins"
-          />
-        </div>
-
-        {/* Quick Actions */}
-        <div>
-          <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-3 md:mb-4">
-            Quick Actions
-          </h2>
-          <Link href={`/analytics/leaderboard?eventId=${eventId}`}>
-            <div className="bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-4 md:p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Award className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-base md:text-lg">
-                      View Event Leaderboard
-                    </h3>
-                    <p className="text-xs md:text-sm text-white/80">
-                      See top check-in performers for this event
-                    </p>
-                  </div>
-                </div>
-                <ChevronLeft className="w-5 h-5 rotate-180" />
-              </div>
-            </div>
-          </Link>
         </div>
       </div>
     </div>
