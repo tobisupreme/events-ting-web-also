@@ -5,7 +5,7 @@ import Error from "./results/Error";
 import NoTicketFound from "./results/NoTicketFound";
 import Success from "./results/Success";
 
-const ResultContainer = ({ result, emailOrTicketId, eventId }) => {
+const ResultContainer = ({ result, emailOrTicketId, eventId, event }) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const isEmail = emailRegex.test(emailOrTicketId);
 
@@ -51,6 +51,7 @@ const ResultContainer = ({ result, emailOrTicketId, eventId }) => {
       ticketId={ticketId}
       handleCheckin={handleCheckin}
       checkedIn={checkedIn}
+      event={event}
     />
   );
 };

@@ -15,7 +15,7 @@ const DynamicScannerContainer = dynamic(
   }
 );
 
-const Main = ({ eventId }) => {
+const Main = ({ eventId, event }) => {
   const [emailOrTicketId, setEmailOrTicketId] = useState("");
   const [resultContainerVisible, setResultContainerVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -300,6 +300,7 @@ const Main = ({ eventId }) => {
                   result={result}
                   emailOrTicketId={emailOrTicketId}
                   eventId={eventId}
+                  event={event}
                 />
               )
             )}

@@ -1,8 +1,24 @@
+import { getEventStatus } from "@/lib/eventUtils";
+import { Clock } from "lucide-react";
 import { useState } from "react";
 import UserInfo from "./UserInfo";
 
-const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
+const Success = ({ result, ticketId, handleCheckin, checkedIn, event }) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const isPastEvent = event
+    ? !getEventStatus(event.startDate, event.endDate).isUpcoming &&
+      !getEventStatus(event.startDate, event.endDate).isOngoing
+    : false;
+
+  const formattedEndDate = event
+    ? new Date(event.endDate).toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
 
   return (
     <div>
@@ -58,6 +74,22 @@ const Success = ({ result, ticketId, handleCheckin, checkedIn }) => {
           <div>
             <hr className="my-5 w-[80vw]" />
             <UserInfo user={result.data.attendee} ticketId={ticketId} />
+
+            {/* Past event warning */}
+            {isPastEvent && !checkedIn && (
+              <div className="mb-3 flex space-x-2 items-start mx-auto p-4 bg-orange-50 dark:bg-orange-900/20 border-2 border-orange-200 dark:border-orange-800 rounded-lg w-fit mt-5 max-w-md">
+                <Clock className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                <div className="text-left">
+                  <p className="font-semibold text-orange-800 dark:text-orange-200">
+                    Past Event Warning
+                  </p>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">
+                    This event ended on {formattedEndDate}. Please confirm you
+                    want to proceed with check-in.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {!checkedIn ? (
               <button
