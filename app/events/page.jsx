@@ -1,6 +1,7 @@
 import api from "@/lib/api";
 import { urls } from "@/lib/urls";
 import { cookies } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 import { cache } from "react";
 import { getEventStatus } from "../../lib/eventUtils";
@@ -45,10 +46,14 @@ const EventCard = ({ event }) => {
         {/* Image Section */}
         <div className="relative w-full aspect-video overflow-hidden bg-gray-200 dark:bg-gray-700">
           {imageUrl ? (
-            <img
+            <Image
               src={imageUrl}
               alt={event.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              priority={false}
+              unoptimized
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">

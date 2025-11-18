@@ -57,8 +57,8 @@ function formatEventTime(start, end) {
 
 export default async function EventDashboardPage({ params }) {
   const { eventId } = await params;
-  const event = await getEvent(eventId);
-  const user = await verifySession();
+
+  const [event, user] = await Promise.all([getEvent(eventId), verifySession()]);
 
   const canCheckIn =
     user?.roles?.includes("ADMIN") || user?.roles?.includes("STAFF");

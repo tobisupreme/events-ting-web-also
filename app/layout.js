@@ -1,5 +1,6 @@
 import { DesktopNavbar, MobileNavbar } from "@/components/Navbar";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import { verifySession } from "./actions/verifySession";
 import "./globals.css";
 
@@ -29,7 +30,20 @@ export default async function RootLayout({ children }) {
           <div className="hidden md:block">
             <DesktopNavbar user={user} />
           </div>
-          <main>{children}</main>
+          <main>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center min-h-[50vh]">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-theme-primary border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-gray-600 font-medium">Loading...</p>
+                  </div>
+                </div>
+              }
+            >
+              {children}
+            </Suspense>
+          </main>
         </div>
       </body>
     </html>

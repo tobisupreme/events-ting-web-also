@@ -55,8 +55,11 @@ export default async function LeaderboardPage({ searchParams }) {
   }
 
   const params = await searchParams;
-  const leaderboardData = await getLeaderboard(params);
-  const eventName = params.eventId ? await getEventName(params.eventId) : null;
+
+  const [leaderboardData, eventName] = await Promise.all([
+    getLeaderboard(params),
+    params.eventId ? getEventName(params.eventId) : Promise.resolve(null),
+  ]);
 
   const backUrl = params.eventId
     ? `/events/${params.eventId}/analytics`
