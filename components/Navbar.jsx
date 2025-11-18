@@ -1,6 +1,7 @@
 "use client";
 
 import { handleLogout } from "@/app/actions/logout";
+import { canAccessAnalytics } from "@/lib/permissions";
 import { BarChart3, Calendar, Loader2, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -87,7 +88,7 @@ export const DesktopNavbar = ({ user }) => {
         >
           Events
         </NavItem>
-        {user?.roles?.includes("ADMIN") && (
+        {canAccessAnalytics(user) && (
           <NavItem
             href="/analytics/summary"
             icon={<AnalyticsIcon />}
@@ -176,7 +177,7 @@ export const MobileNavbar = ({ user }) => {
             >
               Events
             </NavItem>
-            {user?.roles?.includes("ADMIN") && (
+            {canAccessAnalytics(user) && (
               <NavItem
                 href="/analytics/summary"
                 icon={<AnalyticsIcon />}

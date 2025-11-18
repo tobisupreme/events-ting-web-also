@@ -1,5 +1,6 @@
 import { verifySession } from "@/app/actions/verifySession";
 import api from "@/lib/api";
+import { canAccessAnalytics, canCheckInAttendees } from "@/lib/permissions";
 import { urls } from "@/lib/urls";
 import { BarChart3, Calendar, ChevronLeft, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
@@ -60,9 +61,8 @@ export default async function EventDashboardPage({ params }) {
 
   const [event, user] = await Promise.all([getEvent(eventId), verifySession()]);
 
-  const canCheckIn =
-    user?.roles?.includes("ADMIN") || user?.roles?.includes("STAFF");
-  const isAdmin = user?.roles?.includes("ADMIN");
+  const canCheckIn = canCheckInAttendees(user);
+  const isAdmin = canAccessAnalytics(user);
 
   const eventDate = new Date(event.startDate).toLocaleDateString("en-US", {
     weekday: "long",

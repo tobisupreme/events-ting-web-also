@@ -3,6 +3,7 @@ import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
 import ProgressBar from "@/components/analytics/ProgressBar";
 import StatCard from "@/components/analytics/StatCard";
 import api from "@/lib/api";
+import { canAccessAnalytics } from "@/lib/permissions";
 import { urls } from "@/lib/urls";
 import {
   Award,
@@ -40,7 +41,7 @@ const getEventStats = cache(async (eventId) => {
 
 export default async function EventAnalyticsPage({ params }) {
   const user = await verifySession();
-  if (!user?.roles?.includes("ADMIN")) {
+  if (!canAccessAnalytics(user)) {
     redirect("/events");
   }
 

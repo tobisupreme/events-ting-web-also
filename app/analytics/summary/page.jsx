@@ -3,6 +3,7 @@ import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
 import RecentActivityList from "@/components/analytics/RecentActivityList";
 import StatCard from "@/components/analytics/StatCard";
 import api from "@/lib/api";
+import { canAccessAnalytics } from "@/lib/permissions";
 import { urls } from "@/lib/urls";
 import {
   Activity,
@@ -40,7 +41,7 @@ const getAnalyticsSummary = cache(async (searchParams) => {
 
 export default async function AnalyticsSummaryPage({ searchParams }) {
   const user = await verifySession();
-  if (!user?.roles?.includes("ADMIN")) {
+  if (!canAccessAnalytics(user)) {
     redirect("/events");
   }
 

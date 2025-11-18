@@ -2,6 +2,7 @@ import { verifySession } from "@/app/actions/verifySession";
 import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
 import LeaderboardTable from "@/components/analytics/LeaderboardTable";
 import api from "@/lib/api";
+import { canAccessAnalytics } from "@/lib/permissions";
 import { urls } from "@/lib/urls";
 import { Award, ChevronLeft } from "lucide-react";
 import { cookies } from "next/headers";
@@ -50,7 +51,7 @@ const getEventName = cache(async (eventId) => {
 
 export default async function LeaderboardPage({ searchParams }) {
   const user = await verifySession();
-  if (!user?.roles?.includes("ADMIN")) {
+  if (!canAccessAnalytics(user)) {
     redirect("/events");
   }
 
