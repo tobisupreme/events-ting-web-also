@@ -1,8 +1,8 @@
 import { verifySession } from "@/app/actions/verifySession";
 import api from "@/lib/api";
-import { canAccessAnalytics, canCheckInAttendees } from "@/lib/permissions";
+import { canAccessAnalytics, canCheckInAttendees, isAdmin } from "@/lib/permissions";
 import { urls } from "@/lib/urls";
-import { BarChart3, Calendar, ChevronLeft, MapPin } from "lucide-react";
+import { BarChart3, Calendar, ChevronLeft, Mail, MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { cache } from "react";
@@ -62,7 +62,8 @@ export default async function EventDashboardPage({ params }) {
   const [event, user] = await Promise.all([getEvent(eventId), verifySession()]);
 
   const canCheckIn = canCheckInAttendees(user);
-  const isAdmin = canAccessAnalytics(user);
+  const hasAnalyticsAccess = canAccessAnalytics(user);
+  const isAdminOnly = isAdmin(user);
 
   const eventDate = new Date(event.startDate).toLocaleDateString("en-US", {
     weekday: "long",
@@ -206,7 +207,7 @@ export default async function EventDashboardPage({ params }) {
               )}
 
               {/* Analytics Card */}
-              {isAdmin && (
+              {hasAnalyticsAccess && (
                 <Link href={`/events/${eventId}/analytics`}>
                   <div className="group bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-4 md:p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
                     <div className="flex items-center gap-2 md:gap-3">
@@ -217,6 +218,25 @@ export default async function EventDashboardPage({ params }) {
                         </h3>
                         <p className="text-xs md:text-sm text-white/80">
                           Statistics and check-in insights
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              )}
+
+              {/* Manage Registrations Card - ADMIN ONLY */}
+              {isAdminOnly && (
+                <Link href={`/events/${eventId}/registrations`}>
+                  <div className="group bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-4 md:p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                    <div className="flex items-center gap-2 md:gap-3">
+                      <Mail className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
+                      <div>
+                        <h3 className="font-semibold text-base md:text-lg">
+                          Manage Registrations
+                        </h3>
+                        <p className="text-xs md:text-sm text-white/80">
+                          View attendees and send tickets
                         </p>
                       </div>
                     </div>
