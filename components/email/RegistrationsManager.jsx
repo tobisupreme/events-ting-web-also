@@ -1,24 +1,71 @@
 "use client";
 
+import PaginationControls from "@/components/ui/PaginationControls";
+import api from "@/lib/api";
+import { urls } from "@/lib/urls";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useState } from "react";
+import useSWR from "swr";
 import BulkEmailButton from "./BulkEmailButton";
 import EmailProgressTracker from "./EmailProgressTracker";
 import RegistrationsTable from "./RegistrationsTable";
+import RegistrationsTableSkeleton from "./RegistrationsTableSkeleton";
 import ResendButton from "./ResendButton";
 import SendAllButton from "./SendAllButton";
 import SendAllModal from "./SendAllModal";
+
+// Fetcher function that accepts token
+const fetcher = async ([url, page, limit, token]) => {
+  const response = await api.get(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      page,
+      limit,
+    },
+  });
+
+  const responseData = response.data?.data;
+  const rows = Array.isArray(responseData)
+    ? responseData
+    : responseData?.rows || [];
+  const pagination = responseData?.pagination || {
+    total: responseData?.count || 0,
+    page: page,
+    limit: limit,
+  };
+
+  return { rows, pagination };
+};
 
 /**
  * Main component to manage registrations and bulk email operations
  * Coordinates all email-related components and state
  */
-export default function RegistrationsManager({
-  eventId,
-  initialRegistrations,
-}) {
+export default function RegistrationsManager({ eventId, token }) {
   const [selectedIds, setSelectedIds] = useState([]);
   const [jobId, setJobId] = useState(null);
   const [isSendAllModalOpen, setIsSendAllModalOpen] = useState(false);
+
+  // URL State
+  const [page, setPage] = useQueryState(
+    "page",
+    parseAsInteger.withDefault(1).withOptions({ shallow: true })
+  );
+  const [limit, setLimit] = useQueryState(
+    "limit",
+    parseAsInteger.withDefault(20).withOptions({ shallow: true })
+  );
+
+  // Data Fetching
+  const { data, isLoading } = useSWR(
+    [urls.registrations.byEvent(eventId), page, limit, token],
+    fetcher,
+    {
+      keepPreviousData: false, // Show skeleton on every page change
+    }
+  );
 
   const handleJobStart = (newJobId) => {
     setJobId(newJobId);
@@ -28,6 +75,13 @@ export default function RegistrationsManager({
   const handleJobComplete = (status) => {
     // Optionally refresh registrations or show completion message
     console.log("Job completed:", status);
+  };
+
+  const registrations = data?.rows || [];
+  const pagination = data?.pagination || {
+    total: 0,
+    page: 1,
+    limit: 20,
   };
 
   return (
@@ -57,12 +111,38 @@ export default function RegistrationsManager({
         <EmailProgressTracker jobId={jobId} onComplete={handleJobComplete} />
       )}
 
-      {/* Registrations table */}
-      <RegistrationsTable
-        registrations={initialRegistrations}
-        onSelectionChange={setSelectedIds}
-        isLoading={false}
-      />
+      {/* Registrations table or Skeleton */}
+      {isLoading ? (
+        <RegistrationsTableSkeleton />
+      ) : (
+        <>
+          {/* Pagination (Top) */}
+          <PaginationControls
+            currentPage={pagination.page}
+            totalPages={Math.ceil(pagination.total / pagination.limit)}
+            totalItems={pagination.total}
+            limit={pagination.limit}
+            onPageChange={setPage}
+            onLimitChange={setLimit}
+          />
+
+          <RegistrationsTable
+            registrations={registrations}
+            onSelectionChange={setSelectedIds}
+            isLoading={false}
+          />
+
+          {/* Pagination */}
+          <PaginationControls
+            currentPage={pagination.page}
+            totalPages={Math.ceil(pagination.total / pagination.limit)}
+            totalItems={pagination.total}
+            limit={pagination.limit}
+            onPageChange={setPage}
+            onLimitChange={setLimit}
+          />
+        </>
+      )}
 
       {/* Send all modal */}
       <SendAllModal
@@ -70,7 +150,7 @@ export default function RegistrationsManager({
         isOpen={isSendAllModalOpen}
         onClose={() => setIsSendAllModalOpen(false)}
         onJobStart={handleJobStart}
-        totalRegistrations={initialRegistrations.length}
+        totalRegistrations={pagination.total}
       />
 
       {/* Info box */}
