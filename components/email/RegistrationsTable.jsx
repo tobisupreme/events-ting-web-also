@@ -1,42 +1,12 @@
 "use client";
 
 import { Mail, MailCheck, Ticket } from "lucide-react";
-import { useState } from "react";
 
 /**
  * Table component to display registrations with checkbox selection
  * Includes email sent status indicators
  */
-export default function RegistrationsTable({
-  registrations,
-  onSelectionChange,
-  isLoading,
-}) {
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
-
-  const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectedIds([]);
-      onSelectionChange([]);
-    } else {
-      const allIds = registrations.map((r) => r.id);
-      setSelectedIds(allIds);
-      onSelectionChange(allIds);
-    }
-    setSelectAll(!selectAll);
-  };
-
-  const handleSelectRow = (id) => {
-    const newSelection = selectedIds.includes(id)
-      ? selectedIds.filter((sid) => sid !== id)
-      : [...selectedIds, id];
-
-    setSelectedIds(newSelection);
-    onSelectionChange(newSelection);
-    setSelectAll(newSelection.length === registrations.length);
-  };
-
+export default function RegistrationsTable({ registrations }) {
   if (registrations.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
@@ -57,15 +27,6 @@ export default function RegistrationsTable({
         <table className="w-full">
           <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
             <tr>
-              <th className="px-4 py-3 text-left">
-                <input
-                  type="checkbox"
-                  checked={selectAll}
-                  onChange={handleSelectAll}
-                  className="w-4 h-4 rounded border-gray-300 text-theme-primary focus:ring-theme-primary"
-                  aria-label="Select all"
-                />
-              </th>
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">
                 Name
               </th>
@@ -82,7 +43,6 @@ export default function RegistrationsTable({
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {registrations.map((registration) => {
-              const isSelected = selectedIds.includes(registration.id);
               // Extract email sent status (if available from backend)
               const emailSent = registration.emailSent || false;
               // Extract ticket status from first ticket in tickets array
@@ -92,21 +52,8 @@ export default function RegistrationsTable({
               return (
                 <tr
                   key={registration.id}
-                  className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${
-                    isSelected ? "bg-purple-50 dark:bg-purple-900/20" : ""
-                  }`}
+                  className={`hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors`}
                 >
-                  <td className="px-4 py-3">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => handleSelectRow(registration.id)}
-                      className="w-4 h-4 rounded border-gray-300 text-theme-primary focus:ring-theme-primary"
-                      aria-label={`Select ${
-                        registration.attendee?.name || "registration"
-                      }`}
-                    />
-                  </td>
                   <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
                     {registration.attendee?.name || "N/A"}
                   </td>
@@ -143,16 +90,6 @@ export default function RegistrationsTable({
           </tbody>
         </table>
       </div>
-
-      {/* Selection summary */}
-      {selectedIds.length > 0 && (
-        <div className="bg-purple-50 dark:bg-purple-900/20 border-t border-purple-200 dark:border-purple-800 px-4 py-3">
-          <p className="text-sm font-medium text-purple-900 dark:text-purple-200">
-            {selectedIds.length} registration
-            {selectedIds.length !== 1 ? "s" : ""} selected
-          </p>
-        </div>
-      )}
     </div>
   );
 }
