@@ -67,121 +67,94 @@ export default function PaginationControls({
   if (totalItems === 0) return null;
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6">
-      {/* Mobile view */}
-      <div className="flex flex-1 justify-between sm:hidden">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage <= 1}
-          className={`relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${
-            currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-          }`}
-        >
-          Previous
-        </button>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-          className={`relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ${
-            currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
-          }`}
-        >
-          Next
-        </button>
+    <div className="flex flex-col sm:flex-row items-center justify-between border-t border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 gap-4">
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto justify-center sm:justify-start">
+        <p className="text-sm text-gray-700 dark:text-gray-300 text-center sm:text-left">
+          Showing{" "}
+          <span className="font-medium">
+            {Math.min((currentPage - 1) * limit + 1, totalItems)}
+          </span>{" "}
+          to{" "}
+          <span className="font-medium">
+            {Math.min(currentPage * limit, totalItems)}
+          </span>{" "}
+          of <span className="font-medium">{totalItems}</span> results
+        </p>
+
+        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <label htmlFor="limit-select" className="whitespace-nowrap">
+            Rows per page:
+          </label>
+          <select
+            id="limit-select"
+            value={limit}
+            onChange={handleLimitChange}
+            className="block w-full rounded-md border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-theme-primary sm:text-sm sm:leading-6 dark:bg-gray-800 dark:text-white dark:ring-gray-600"
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
       </div>
 
-      {/* Desktop view */}
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            Showing{" "}
-            <span className="font-medium">
-              {Math.min((currentPage - 1) * limit + 1, totalItems)}
-            </span>{" "}
-            to{" "}
-            <span className="font-medium">
-              {Math.min(currentPage * limit, totalItems)}
-            </span>{" "}
-            of <span className="font-medium">{totalItems}</span> results
-          </p>
-
-          <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <label htmlFor="limit-select" className="whitespace-nowrap">
-              Rows per page:
-            </label>
-            <select
-              id="limit-select"
-              value={limit}
-              onChange={handleLimitChange}
-              className="block w-full rounded-md border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-theme-primary sm:text-sm sm:leading-6 dark:bg-gray-800 dark:text-white dark:ring-gray-600"
-            >
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <nav
-            className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-            aria-label="Pagination"
+      <div className="flex justify-center w-full sm:w-auto">
+        <nav
+          className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+          aria-label="Pagination"
+        >
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
+              currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+            }`}
           >
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage <= 1}
-              className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-                currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-              }`}
-            >
-              <span className="sr-only">Previous</span>
-              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-            </button>
+            <span className="sr-only">Previous</span>
+            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+          </button>
 
-            {getPageNumbers().map((page, index) => {
-              if (page === "...") {
-                return (
-                  <span
-                    key={`ellipsis-${index}`}
-                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0 dark:text-gray-400 dark:ring-gray-600"
-                  >
-                    <MoreHorizontal className="w-4 h-4" />
-                  </span>
-                );
-              }
-
-              const isCurrent = page === currentPage;
+          {getPageNumbers().map((page, index) => {
+            if (page === "...") {
               return (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  aria-current={isCurrent ? "page" : undefined}
-                  className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0 ${
-                    isCurrent
-                      ? "z-10 bg-theme-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-primary"
-                      : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-700"
-                  }`}
+                <span
+                  key={`ellipsis-${index}`}
+                  className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0 dark:text-gray-400 dark:ring-gray-600"
                 >
-                  {page}
-                </button>
+                  <MoreHorizontal className="w-4 h-4" />
+                </span>
               );
-            })}
+            }
 
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage >= totalPages}
-              className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-                currentPage >= totalPages
-                  ? "pointer-events-none opacity-50"
-                  : ""
-              }`}
-            >
-              <span className="sr-only">Next</span>
-              <ChevronRight className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </nav>
-        </div>
+            const isCurrent = page === currentPage;
+            return (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                aria-current={isCurrent ? "page" : undefined}
+                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0 ${
+                  isCurrent
+                    ? "z-10 bg-theme-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-theme-primary"
+                    : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:text-white dark:ring-gray-600 dark:hover:bg-gray-700"
+                }`}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+            className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
+              currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
+            }`}
+          >
+            <span className="sr-only">Next</span>
+            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </nav>
       </div>
     </div>
   );
