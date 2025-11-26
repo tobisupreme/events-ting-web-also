@@ -107,7 +107,7 @@ export default function PaginationControls({
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage <= 1}
-            className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
+            className={`relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-600 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-20 focus:outline-offset-0 ${
               currentPage <= 1 ? "pointer-events-none opacity-50" : ""
             }`}
           >
@@ -147,7 +147,7 @@ export default function PaginationControls({
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage >= totalPages}
-            className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
+            className={`relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-600 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-20 focus:outline-offset-0 ${
               currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
             }`}
           >

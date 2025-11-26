@@ -23,7 +23,7 @@ export default async function Home() {
           sizes="50vw"
         />
       </div>
-      <div className="flex flex-col justify-center items-center p-8 bg-white">
+      <div className="flex flex-col justify-center items-center p-8 bg-white dark:bg-gray-900">
         <div className="w-full max-w-md">
           <LoginForm />
         </div>

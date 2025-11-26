@@ -49,17 +49,17 @@ export function LoginForm() {
       <form action={formAction} className="space-y-8">
         {state?.error && (
           <div
-            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+            className="bg-red-100 dark:bg-red-500/20 border border-red-400 dark:border-red-500/30 text-red-700 dark:text-red-300 px-4 py-3 rounded relative"
             role="alert"
           >
             <span className="block sm:inline">{state.error}</span>
           </div>
         )}
-        <div className="relative border-b-2 focus-within:border-theme-primary">
+        <div className="relative border-b-2 border-gray-300 dark:border-gray-600 focus-within:border-theme-primary">
           <span className="absolute left-0 top-1/2 -translate-y-1/2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-400"
+              className="h-6 w-6 text-gray-400 dark:text-gray-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -76,15 +76,15 @@ export function LoginForm() {
             type="email"
             name="email"
             placeholder="Email"
-            className="w-full pl-8 pr-4 py-2 text-lg bg-transparent focus:outline-none"
+            className="w-full pl-8 pr-4 py-2 text-lg bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
             required
           />
         </div>
-        <div className="relative border-b-2 focus-within:border-theme-primary">
+        <div className="relative border-b-2 border-gray-300 dark:border-gray-600 focus-within:border-theme-primary">
           <span className="absolute left-0 top-1/2 -translate-y-1/2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-400"
+              className="h-6 w-6 text-gray-400 dark:text-gray-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -101,7 +101,7 @@ export function LoginForm() {
             type="password"
             name="password"
             placeholder="Password"
-            className="w-full pl-8 pr-4 py-2 text-lg bg-transparent focus:outline-none"
+            className="w-full pl-8 pr-4 py-2 text-lg bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
             required
           />
         </div>
@@ -109,7 +109,7 @@ export function LoginForm() {
           <a
             href="#"
             onClick={handleForgotPasswordClick}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           >
             Forgot Password?
           </a>

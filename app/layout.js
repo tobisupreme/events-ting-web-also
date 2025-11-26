@@ -27,7 +27,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white`}>
+      <body className={`${inter.className} bg-background text-foreground`}>
         <NuqsAdapter>
           <MobileNavbar user={user} />
           <div className="md:grid md:grid-cols-[250px_1fr]">
@@ -40,7 +40,9 @@ export default async function RootLayout({ children }) {
                   <div className="flex items-center justify-center min-h-[50vh]">
                     <div className="flex flex-col items-center gap-4">
                       <div className="w-12 h-12 border-4 border-theme-primary border-t-transparent rounded-full animate-spin"></div>
-                      <p className="text-gray-600 font-medium">Loading...</p>
+                      <p className="text-gray-600 dark:text-gray-400 font-medium">
+                        Loading...
+                      </p>
                     </div>
                   </div>
                 }

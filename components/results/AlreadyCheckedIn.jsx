@@ -24,7 +24,7 @@ const AlreadyCheckedIn = ({ result, ticketId, handleCheckin, checkedIn }) => {
             />
           </svg>
           <h1 className="text-2xl font-bold text-yellow-500">Checked In</h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-600 dark:text-gray-400">
             This ticket has already been checked in!
           </p>
         </div>
@@ -34,10 +34,10 @@ const AlreadyCheckedIn = ({ result, ticketId, handleCheckin, checkedIn }) => {
         {result.data.tickets.length > 1 &&
           result.data.tickets.filter((e) => e.status === "Pending").length >
             0 && (
-            <div className="border border-dotted rounded p-4 !mt-5">
-              <div className="mb-3 flex space-x-1 italic items-center mx-auto p-3 bg-gray-200 rounded  w-fit mt-5">
+            <div className="border border-dotted border-gray-300 dark:border-gray-600 rounded p-4 !mt-5">
+              <div className="mb-3 flex space-x-1 italic items-center mx-auto p-3 bg-blue-50 dark:bg-blue-500/20 border border-blue-200 dark:border-blue-500/30 rounded w-fit mt-5">
                 <svg
-                  className="w-6 h-6 text-gray-800"
+                  className="w-6 h-6 text-blue-600 dark:text-blue-400"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -53,7 +53,7 @@ const AlreadyCheckedIn = ({ result, ticketId, handleCheckin, checkedIn }) => {
                     d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
-                <span>
+                <span className="text-blue-700 dark:text-blue-300">
                   This person has{" "}
                   {
                     result.data.tickets.filter((e) => e.status === "Pending")

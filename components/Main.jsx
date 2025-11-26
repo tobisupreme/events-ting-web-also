@@ -107,8 +107,8 @@ const Main = ({ eventId, event }) => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-2 md:py-4 flex-shrink-0">
+    <div className="h-screen flex flex-col bg-background">
+      <div className="bg-background border-b border-gray-200 dark:border-gray-800 py-2 md:py-4 flex-shrink-0">
         <div className="container mx-auto px-4">
           <Link href={`/events/${eventId}`}>
             <div className="inline-flex items-center text-gray-600 hover:text-theme-primary dark:text-gray-400 dark:hover:text-theme-primary_focus transition-colors text-sm md:text-base">

@@ -26,18 +26,19 @@ function StatusBadge({ status }) {
         icon: CheckCircle2,
         label: "Checked In",
         classes:
-          "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+          "bg-green-100 text-green-800 dark:bg-green-500/20 dark:text-green-300 dark:ring-1 dark:ring-green-500/30",
       },
       Pending: {
         icon: Clock,
         label: "Not Checked In",
         classes:
-          "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+          "bg-yellow-100 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300 dark:ring-1 dark:ring-yellow-500/30",
       },
       Cancelled: {
         icon: XCircle,
         label: "Cancelled",
-        classes: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+        classes:
+          "bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300 dark:ring-1 dark:ring-red-500/30",
       },
     };
     return configs[status] || configs.Pending;
@@ -65,8 +66,8 @@ function SortableHeader({ children, column, sortBy, sortDirection, onSort }) {
   return (
     <th
       onClick={() => onSort(column)}
-      className="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300
-               uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600
+      className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-200
+               uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700
                transition-colors select-none"
     >
       <div className="flex items-center gap-2">
@@ -74,12 +75,12 @@ function SortableHeader({ children, column, sortBy, sortDirection, onSort }) {
         <div className="w-4">
           {isSorted ? (
             sortDirection === "asc" ? (
-              <ArrowUp className="w-4 h-4" />
+              <ArrowUp className="w-4 h-4 text-gray-700 dark:text-gray-200" />
             ) : (
-              <ArrowDown className="w-4 h-4" />
+              <ArrowDown className="w-4 h-4 text-gray-700 dark:text-gray-200" />
             )
           ) : (
-            <ArrowUpDown className="w-4 h-4 opacity-40" />
+            <ArrowUpDown className="w-4 h-4 opacity-40 dark:opacity-60" />
           )}
         </div>
       </div>
@@ -97,7 +98,7 @@ function RegistrationCard({ registration }) {
     registration.tickets?.[0]?.ticketId || registration.tickets?.[0]?.id;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 p-4 shadow-sm dark:shadow-gray-900/50">
       <div className="flex items-start gap-3">
         <div className="flex-1 min-w-0">
           {/* Header with avatar and name */}
@@ -144,7 +145,7 @@ function RegistrationCard({ registration }) {
                   <span className="font-medium">Sent</span>
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-gray-400 dark:text-gray-500">
+                <div className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
                   <Mail className="w-4 h-4" />
                   <span>Not sent</span>
                 </div>
@@ -184,7 +185,7 @@ export default function RegistrationsTable({
   if (registrations.length === 0 && !searchQuery && statusFilter === "all") {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
-        <Ticket className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+        <Ticket className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
           No Registrations Found
         </h3>
@@ -202,7 +203,7 @@ export default function RegistrationsTable({
         <div className="flex flex-col lg:flex-row gap-3">
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
               placeholder="Search by name, email, or ticket ID..."
@@ -258,7 +259,7 @@ export default function RegistrationsTable({
       {/* Empty State After Filtering */}
       {registrations.length === 0 ? (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
-          <Search className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <Search className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
             No Results Found
           </h3>
