@@ -2,8 +2,16 @@
 
 import { handleLogout } from "@/app/actions/logout";
 import { lato } from "@/app/fonts";
-import { canAccessAnalytics } from "@/lib/permissions";
-import { BarChart3, Calendar, Loader2, LogOut, Menu, X } from "lucide-react";
+import { canAccessAnalytics, isAdmin } from "@/lib/permissions";
+import {
+  BarChart3,
+  Calendar,
+  Loader2,
+  LogOut,
+  Menu,
+  Users,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -11,6 +19,7 @@ import { useFormStatus } from "react-dom";
 
 const CalendarIcon = ({ size = 20 }) => <Calendar size={size} />;
 const AnalyticsIcon = ({ size = 20 }) => <BarChart3 size={size} />;
+const UsersIcon = ({ size = 20 }) => <Users size={size} />;
 const LogoutIcon = ({ size = 20 }) => <LogOut size={size} />;
 const MenuIcon = ({ size = 24 }) => <Menu size={size} />;
 const CloseIcon = ({ size = 24 }) => <X size={size} />;
@@ -100,6 +109,15 @@ export const DesktopNavbar = ({ user }) => {
             active={pathname?.startsWith("/analytics")}
           >
             Analytics
+          </NavItem>
+        )}
+        {isAdmin(user) && (
+          <NavItem
+            href="/admin/users"
+            icon={<UsersIcon />}
+            active={pathname?.startsWith("/admin/users")}
+          >
+            Users
           </NavItem>
         )}
       </nav>
@@ -195,6 +213,17 @@ export const MobileNavbar = ({ user }) => {
                 isMobile={true}
               >
                 Analytics
+              </NavItem>
+            )}
+            {isAdmin(user) && (
+              <NavItem
+                href="/admin/users"
+                icon={<UsersIcon />}
+                active={pathname?.startsWith("/admin/users")}
+                onClick={handleNavClick}
+                isMobile={true}
+              >
+                Users
               </NavItem>
             )}
           </div>
