@@ -1,6 +1,5 @@
 import { verifySession } from "@/app/actions/verifySession";
-import AnalyticsEmpty from "@/components/analytics/AnalyticsEmpty";
-import LeaderboardTable from "@/components/analytics/LeaderboardTable";
+import LeaderboardManager from "@/components/analytics/LeaderboardManager";
 import api from "@/lib/api";
 import { canCheckInAttendees } from "@/lib/permissions";
 import { urls } from "@/lib/urls";
@@ -9,27 +8,6 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-
-// Revalidate every 30 seconds (more dynamic)
-export const revalidate = 30;
-
-const getLeaderboard = cache(async (searchParams) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("eventsTingAuthToken");
-
-  try {
-    const response = await api.get(urls.analytics.leaderboard, {
-      headers: {
-        Authorization: `Bearer ${token?.value}`,
-      },
-      params: searchParams,
-    });
-    return response.data?.data || null;
-  } catch (error) {
-    console.error("Failed to fetch leaderboard:", error);
-    return null;
-  }
-});
 
 const getEventName = cache(async (eventId) => {
   const cookieStore = await cookies();
@@ -56,11 +34,10 @@ export default async function LeaderboardPage({ searchParams }) {
   }
 
   const params = await searchParams;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("eventsTingAuthToken")?.value;
 
-  const [leaderboardData, eventName] = await Promise.all([
-    getLeaderboard(params),
-    params.eventId ? getEventName(params.eventId) : Promise.resolve(null),
-  ]);
+  const eventName = params.eventId ? await getEventName(params.eventId) : null;
 
   const backUrl = params.eventId
     ? `/events/${params.eventId}/analytics`
@@ -100,39 +77,11 @@ export default async function LeaderboardPage({ searchParams }) {
           </p>
         </div>
 
-        {/* Stats Summary */}
-        {leaderboardData?.pagination && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">
-                Total Users:{" "}
-                <span className="font-semibold text-gray-900 dark:text-white">
-                  {leaderboardData.pagination.total}
-                </span>
-              </span>
-              {leaderboardData.pagination.page && (
-                <span className="text-gray-600 dark:text-gray-400">
-                  Page {leaderboardData.pagination.page} of{" "}
-                  {Math.ceil(
-                    leaderboardData.pagination.total /
-                      leaderboardData.pagination.limit
-                  )}
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Leaderboard Table */}
-        {leaderboardData?.leaderboard &&
-        leaderboardData.leaderboard.length > 0 ? (
-          <LeaderboardTable leaderboard={leaderboardData.leaderboard} />
-        ) : (
-          <AnalyticsEmpty
-            icon={Award}
-            message="No leaderboard data available"
-          />
-        )}
+        {/* Client component with SWR */}
+        <LeaderboardManager
+          token={token}
+          initialEventId={params.eventId || ""}
+        />
       </div>
     </div>
   );

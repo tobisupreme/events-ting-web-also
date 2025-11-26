@@ -1,6 +1,6 @@
 import { Award, Medal, Trophy } from "lucide-react";
 
-export default function LeaderboardTable({ leaderboard = [] }) {
+export default function LeaderboardTable({ leaderboard = [], onRefresh }) {
   const getRankIcon = (rank) => {
     switch (rank) {
       case 1:
