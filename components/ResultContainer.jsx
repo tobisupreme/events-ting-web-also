@@ -6,8 +6,9 @@ import NoTicketFound from "./results/NoTicketFound";
 import Success from "./results/Success";
 
 const ResultContainer = ({ result, emailOrTicketId, eventId, event }) => {
+  const normalisedEmailOrTicketId = emailOrTicketId?.trim().toLowerCase();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const isEmail = emailRegex.test(emailOrTicketId);
+  const isEmail = emailRegex.test(normalisedEmailOrTicketId);
 
   const [checkedIn, setCheckedIn] = useState(false);
 
@@ -18,8 +19,10 @@ const ResultContainer = ({ result, emailOrTicketId, eventId, event }) => {
   const pendingTicket = result.data.tickets.find((e) => e.status === "Pending");
   const ticket = isEmail
     ? pendingTicket
-    : result.data.tickets.find((e) => e.ticketId === emailOrTicketId);
-  const ticketId = isEmail ? pendingTicket?.ticketId : emailOrTicketId;
+    : result.data.tickets.find((e) => e.ticketId === normalisedEmailOrTicketId);
+  const ticketId = isEmail
+    ? pendingTicket?.ticketId
+    : normalisedEmailOrTicketId;
 
   const handleCheckin = async () => {
     try {
