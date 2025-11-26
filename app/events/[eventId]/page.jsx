@@ -1,8 +1,19 @@
 import { verifySession } from "@/app/actions/verifySession";
 import api from "@/lib/api";
-import { canAccessAnalytics, canCheckInAttendees, isAdmin } from "@/lib/permissions";
+import {
+  canAccessAnalytics,
+  canCheckInAttendees,
+  isAdmin,
+} from "@/lib/permissions";
 import { urls } from "@/lib/urls";
-import { BarChart3, Calendar, ChevronLeft, Mail, MapPin } from "lucide-react";
+import {
+  Award,
+  BarChart3,
+  Calendar,
+  ChevronLeft,
+  Mail,
+  MapPin,
+} from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { cache } from "react";
@@ -201,6 +212,28 @@ export default async function EventDashboardPage({ params }) {
                           Scan tickets and verify registrations
                         </p>
                       </div>
+                    </div>
+                  </div>
+                </Link>
+              )}
+
+              {/* View Check-in Leaderboard Card */}
+              {canCheckIn && (
+                <Link href={`/analytics/leaderboard?eventId=${eventId}`}>
+                  <div className="bg-gradient-to-br from-theme-primary to-theme-primary_dark text-white rounded-lg p-4 md:p-6 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Award className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
+                        <div>
+                          <h3 className="font-semibold text-base md:text-lg">
+                            View Check-in Leaderboard
+                          </h3>
+                          <p className="text-xs md:text-sm text-white/80">
+                            See top check-in performers for this event
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronLeft className="w-5 h-5 rotate-180" />
                     </div>
                   </div>
                 </Link>
