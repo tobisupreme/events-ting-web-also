@@ -2,6 +2,7 @@
 
 import { handleLogout } from "@/app/actions/logout";
 import { lato } from "@/app/fonts";
+import UserProfileDropdown from "@/components/ui/UserProfileDropdown";
 import { canAccessAnalytics, isAdmin } from "@/lib/permissions";
 import {
   BarChart3,
@@ -121,7 +122,8 @@ export const DesktopNavbar = ({ user }) => {
           </NavItem>
         )}
       </nav>
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 space-y-2">
+        <UserProfileDropdown user={user} />
         <form action={handleLogout}>
           <LogoutButton />
         </form>
@@ -227,7 +229,8 @@ export const MobileNavbar = ({ user }) => {
               </NavItem>
             )}
           </div>
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 space-y-2">
+            <UserProfileDropdown user={user} isMobile={true} />
             <form action={handleLogout}>
               <LogoutButton isMobile={true} />
             </form>
