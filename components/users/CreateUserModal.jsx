@@ -1,6 +1,7 @@
 "use client";
 
 import Modal from "@/components/shared/Modal";
+import CustomSelect from "@/components/ui/CustomSelect";
 import { useState } from "react";
 
 export default function CreateUserModal({
@@ -56,6 +57,12 @@ export default function CreateUserModal({
     setErrors({});
     onClose();
   };
+
+  const roleOptions = [
+    { value: "STAFF", label: "Staff" },
+    { value: "MANAGER", label: "Manager" },
+    { value: "ADMIN", label: "Admin" },
+  ];
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Create New User">
@@ -131,16 +138,14 @@ export default function CreateUserModal({
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Role
           </label>
-          <select
-            name="role"
+          <CustomSelect
             value={formData.role}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-theme-primary focus:border-transparent"
-          >
-            <option value="STAFF">Staff</option>
-            <option value="MANAGER">Manager</option>
-            <option value="ADMIN">Admin</option>
-          </select>
+            onChange={(value) => {
+              setFormData((prev) => ({ ...prev, role: value }));
+            }}
+            options={roleOptions}
+            className="w-full"
+          />
         </div>
 
         {/* Actions */}

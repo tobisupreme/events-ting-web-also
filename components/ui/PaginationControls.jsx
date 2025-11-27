@@ -1,5 +1,6 @@
 "use client";
 
+import CustomSelect from "@/components/ui/CustomSelect";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 /**
@@ -21,10 +22,16 @@ export default function PaginationControls({
     }
   };
 
-  const handleLimitChange = (e) => {
-    const newLimit = Number(e.target.value);
+  const limitOptions = [
+    { value: 10, label: "10" },
+    { value: 20, label: "20" },
+    { value: 50, label: "50" },
+    { value: 100, label: "100" },
+  ];
+
+  const handleLimitChange = (newLimit) => {
     if (onLimitChange) {
-      onLimitChange(newLimit);
+      onLimitChange(Number(newLimit));
     }
   };
 
@@ -85,17 +92,13 @@ export default function PaginationControls({
           <label htmlFor="limit-select" className="whitespace-nowrap">
             Rows per page:
           </label>
-          <select
+          <CustomSelect
             id="limit-select"
             value={limit}
             onChange={handleLimitChange}
-            className="block w-full rounded-md border-0 py-1.5 pl-3 pr-8 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-theme-primary sm:text-sm sm:leading-6 dark:bg-gray-800 dark:text-white dark:ring-gray-600"
-          >
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
+            options={limitOptions}
+            className="w-full sm:text-sm"
+          />
         </div>
       </div>
 

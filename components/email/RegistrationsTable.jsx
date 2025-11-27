@@ -1,5 +1,6 @@
 "use client";
 
+import CustomSelect from "@/components/ui/CustomSelect";
 import { formatDate, getInitials } from "@/lib/tableUtils";
 import {
   ArrowDown,
@@ -182,6 +183,13 @@ export default function RegistrationsTable({
   onExport,
   onRefresh,
 }) {
+  const statusOptions = [
+    { value: "all", label: "All Statuses" },
+    { value: "Confirmed", label: "Checked In" },
+    { value: "Pending", label: "Not Checked In" },
+    { value: "Cancelled", label: "Cancelled" },
+  ];
+
   if (registrations.length === 0 && !searchQuery && statusFilter === "all") {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
@@ -219,19 +227,11 @@ export default function RegistrationsTable({
 
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-3">
-            <select
+            <CustomSelect
               value={statusFilter}
-              onChange={(e) => onStatusFilterChange(e.target.value)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
-                       bg-white dark:bg-gray-700 text-gray-900 dark:text-white
-                       focus:ring-2 focus:ring-theme-primary focus:border-transparent
-                       transition-colors"
-            >
-              <option value="all">All Statuses</option>
-              <option value="Confirmed">Checked In</option>
-              <option value="Pending">Not Checked In</option>
-              <option value="Cancelled">Cancelled</option>
-            </select>
+              onChange={onStatusFilterChange}
+              options={statusOptions}
+            />
 
             <button
               onClick={onRefresh}
