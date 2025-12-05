@@ -1,8 +1,8 @@
 "use client";
 
 import { handleLogin } from "@/app/actions/handleLogin";
-import { useEffect, useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
 import Confetti from "./Confetti";
 
 const initialState = {};
@@ -22,7 +22,7 @@ function SubmitButton() {
 }
 
 export function LoginForm() {
-  const [state, formAction] = useFormState(handleLogin, initialState);
+  const [state, formAction] = useActionState(handleLogin, initialState);
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
