@@ -22,18 +22,6 @@ import { getEventStatus } from "../../../lib/eventUtils";
 // Revalidate every 60 seconds
 export const revalidate = 60;
 
-// Pre-generate pages for all events at build time
-export async function generateStaticParams() {
-  try {
-    // We can't use cookies in generateStaticParams, so this is limited
-    // But Next.js will still cache the pages once visited
-    return [];
-  } catch (error) {
-    console.error("Failed to generate static params:", error);
-    return [];
-  }
-}
-
 const getEvent = cache(async (eventId) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("eventsTingAuthToken");
